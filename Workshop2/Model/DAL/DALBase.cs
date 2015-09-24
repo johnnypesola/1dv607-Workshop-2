@@ -25,23 +25,39 @@ namespace Workshop2.Model.DAL
         // Methods
         static protected SQLiteConnection CreateConnection()
         {
-            return new SQLiteConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
+            try
+            {
+                return new SQLiteConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
+            }
+            catch (Exception) 
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
 
         static protected SQLiteCommand CreateCommand()
         {
-            return new SQLiteCommand(connection);
+            try
+            {
+                return new SQLiteCommand(connection);
+            }
+            catch (Exception) 
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
 
         static public void SetupTables()
         {
-            using (connection = CreateConnection())
+            try
             {
-                connection.Open();
-
-                using (command = CreateCommand())
+                using (connection = CreateConnection())
                 {
-                    /* Member */
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        /* Member */
                         // Drop existing table if it exists
                         command.CommandText = "DROP TABLE IF EXISTS Member";
                         command.ExecuteNonQuery();
@@ -60,7 +76,7 @@ namespace Workshop2.Model.DAL
                         command.CommandText = "INSERT INTO Member (MemberName, MemberPersonalNumber) VALUES ('Jon Snow', '810610-1256')";
                         command.ExecuteNonQuery();
 
-                    /* Boat */
+                        /* Boat */
                         // Drop existing table if it exists
                         command.CommandText = "DROP TABLE IF EXISTS Boat";
                         command.ExecuteNonQuery();
@@ -73,7 +89,7 @@ namespace Workshop2.Model.DAL
                         command.CommandText = "INSERT INTO Boat (MemberId, BoatTypeId) VALUES (1, 6.3)";
                         command.ExecuteNonQuery();
 
-                    /* BoatType */
+                        /* BoatType */
                         // Drop existing table if it exists
                         command.CommandText = "DROP TABLE IF EXISTS BoatType";
                         command.ExecuteNonQuery();
@@ -94,10 +110,16 @@ namespace Workshop2.Model.DAL
 
                         command.CommandText = "INSERT INTO BoatType (BoatTypeName) VALUES ('Other')";
                         command.ExecuteNonQuery();
-                }
+                    }
 
-                connection.Close();
+                    connection.Close();
+                }
             }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
+
         }
     }
 }
