@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Model\DAL\keep-directory" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -82,11 +82,11 @@ namespace Workshop2.Model.DAL
                         command.ExecuteNonQuery();
 
                         // Create new boat table
-                        command.CommandText = "CREATE TABLE Boat(BoatId INTEGER PRIMARY KEY, MemberId INT, BoatTypeId INT, REAL BoatLength)";
+                        command.CommandText = "CREATE TABLE Boat(BoatId INTEGER PRIMARY KEY, MemberId INT, BoatTypeId INT, BoatLength REAL)";
                         command.ExecuteNonQuery();
 
                         // Add some default boats
-                        command.CommandText = "INSERT INTO Boat (MemberId, BoatTypeId) VALUES (1, 6.3)";
+                        command.CommandText = "INSERT INTO Boat (MemberId, BoatTypeId, BoatLength) VALUES (1, 1, 6.3)";
                         command.ExecuteNonQuery();
 
                         /* BoatType */
@@ -95,7 +95,7 @@ namespace Workshop2.Model.DAL
                         command.ExecuteNonQuery();
 
                         // Create new boat table
-                        command.CommandText = "CREATE TABLE BoatType(BoatTypeId INTEGER PRIMARY KEY, BoatTypeName)";
+                        command.CommandText = "CREATE TABLE BoatType(BoatTypeId INTEGER PRIMARY KEY, BoatTypeName VARCHAR(30))";
                         command.ExecuteNonQuery();
 
                         // Add some default boat types
