@@ -51,6 +51,7 @@
     <Compile Include="Model\DAL\DALBase.cs" />
     <Compile Include="Model\DAL\MemberDAL.cs" />
     <Compile Include="Model\BLL\Member.cs" />
+    <Compile Include="Model\MemberService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\MemberView.cs" />
