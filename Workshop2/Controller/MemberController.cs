@@ -10,23 +10,36 @@ namespace Workshop2.Controller
 {
     class MemberController
     {
-        MemberView memberView;
+        // Fields
+        private MemberService _memberService;
+        private MemberView _memberView;
+
+        // Properties
+        private MemberService MemberService
+        {
+            // Auto create object if needed
+            get
+            {
+                return _memberService ?? (_memberService = new MemberService());
+            }
+        }
+
+        private MemberView MemberView
+        {
+            // Auto create object if needed
+            get
+            {
+                return _memberView ?? (_memberView = new MemberView());
+            }
+        }
+
 
         // Constructor
         public MemberController()
         {
-            // Create view
-            memberView = new MemberView();
-
-            // Create a test member
-            Member member = new Member
-            {
-                Name = "Kalle Anka",
-                PersonalNumber = "321010-1234"
-            };
-
-            // Write out member
-            memberView.WriteOutMember(member);
+            MemberView.WriteOutMembersFromDB();
         }
+
+        // Methods
     }
 }

@@ -13,9 +13,8 @@ namespace Workshop2
         {
             MemberController memberController;
 
-            // Setup tables. WARNING: All data in DB tables are reset to defaults.
-            Model.DAL.DALBase.SetupTables();
-
+            // Uncomment this if you want to reset all the data in database to defaults.
+            //Model.DAL.DALBase.SetupTables();
 
             // Create new member controller, it should do stuff with members
             memberController = new MemberController();
