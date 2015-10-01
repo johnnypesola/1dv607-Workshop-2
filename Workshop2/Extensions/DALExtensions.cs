@@ -9,23 +9,16 @@ namespace Workshop2
 {
     class DALExtensions
     {
-        enum BoatType { Sailboat, Motorsailer, Kayak, Other };
+        enum BoatType { Sailboat, Motorsailer, Canoe, Other };
 
         // Custom enum reader method
         public static BoatType GetBoatTypeEnum(this SQLiteDataReader reader, int columnIndex)
         {
-            string _returnValue = reader.GetString(columnIndex);
-            
-            switch (_returnValue)
-            {
-                case "Sailboat": return BoatType.Sailboat;
-                case "Motorsailer": return BoatType.Motorsailer;
-                case "Kayak": return BoatType.Kayak;
-                case "Other": return BoatType.Other;
-            }
+            // Get string to parse from SQLiteDataReader
+            string _stringToParse = reader.GetString(columnIndex);
 
-            return BoatType.Other;
+            // Parse string to BoatType enum
+            return (BoatType)Enum.Parse(typeof(BoatType), _stringToParse);
         }
-
     }
 }
