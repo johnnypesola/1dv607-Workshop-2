@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Workshop2.Model.BLL;
 
 namespace Workshop2.Model
 {
