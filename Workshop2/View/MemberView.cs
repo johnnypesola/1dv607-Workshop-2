@@ -27,11 +27,16 @@ namespace Workshop2.View
             // Get all members
             IEnumerable<Member> members = MemberService.GetAll();
 
-            // Write out members in console
+
+            //Write out members in console
             foreach (Member member in members) 
             {
-                Console.WriteLine("{0} {1}", member.Name, member.PersonalNumber);
+                Console.WriteLine("{0} {1} {2}", member.Id, member.Name, member.PersonalNumber);
             }
+
+            Member otherMember = MemberService.Get(1);
+
+            Console.WriteLine("{0} {1} {2}", otherMember.Id, otherMember.Name, otherMember.PersonalNumber);
 
             // Wait for user input before app closes
             Console.ReadKey();

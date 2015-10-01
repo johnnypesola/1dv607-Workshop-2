@@ -37,6 +37,18 @@ namespace Workshop2.Controller
         // Constructor
         public MemberController()
         {
+
+            Member testMember = new Member
+            {
+                Id = 4,
+                Name = "Kajsa Ank",
+                PersonalNumber = "521010-3121"
+            };
+
+            //MemberService.Save(testMember);
+
+            
+
             MemberView.WriteOutMembersFromDB();
         }
 
