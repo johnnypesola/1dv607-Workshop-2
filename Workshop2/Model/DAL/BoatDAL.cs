@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Workshop2.Model.BLL;
+using Workshop2;
 
 namespace Workshop2.Model.DAL
 {
@@ -42,7 +43,30 @@ namespace Workshop2.Model.DAL
         }
         public void DeleteBoat(Boat boat)
         {
-            //Add functionality
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "DELETE FROM Boat WHERE BoatId = @BoatId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@MemberId", boat.BoatId);
+
+                        // Remove from DB
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
         public Boat GetBoat(Boat boat)
         {
@@ -88,7 +112,32 @@ namespace Workshop2.Model.DAL
         }
         public void EditBoat(Boat boat)
         {
-            //Add functionality
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "UPDATE Boat SET Length = @BoatLength, BoatType = @BoatType WHERE BoatId = @BoatId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@BoatLength", boat.Length);
+                        command.Parameters.AddWithValue("@BoatType", boat.BoatType);
+                        command.Parameters.AddWithValue("@BoatId", boat.BoatId);
+
+                        // Add to DB
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
     }
 }

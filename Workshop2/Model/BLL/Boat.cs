@@ -9,8 +9,6 @@ namespace Workshop2.Model.BLL
 {
     class Boat
     {
-        public enum BoatTypes { Sailboat, Motorsailer, Canoe, Other };
-
         [Range(0, int.MaxValue, ErrorMessage = "Boat id is out of range.")]
         public int BoatId { get; set; }
 
