@@ -15,6 +15,7 @@ namespace Workshop2.Model
         // Properties
         private MemberDAL MemberDAL
         {
+            // Auto create object if needed
             get
             {
                 return _memberDAL ?? (_memberDAL = new MemberDAL());

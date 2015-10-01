@@ -82,34 +82,16 @@ namespace Workshop2.Model.DAL
                         command.ExecuteNonQuery();
 
                         // Create new boat table
-                        command.CommandText = "CREATE TABLE Boat(BoatId INTEGER PRIMARY KEY, MemberId INT, BoatTypeId INT, BoatLength REAL)";
+                        command.CommandText = "CREATE TABLE Boat(BoatId INTEGER PRIMARY KEY, MemberId INT, BoatType VARCHAR(20), BoatLength REAL)";
                         command.ExecuteNonQuery();
 
                         // Add some default boats
-                        command.CommandText = "INSERT INTO Boat (MemberId, BoatTypeId, BoatLength) VALUES (1, 1, 6.3)";
+                        command.CommandText = "INSERT INTO Boat (MemberId, BoatType, BoatLength) VALUES (1, 'Sailboat', 6.3)";
                         command.ExecuteNonQuery();
 
                         /* BoatType */
                         // Drop existing table if it exists
                         command.CommandText = "DROP TABLE IF EXISTS BoatType";
-                        command.ExecuteNonQuery();
-
-                        // Create new boat table
-                        command.CommandText = "CREATE TABLE BoatType(BoatTypeId INTEGER PRIMARY KEY, BoatTypeName VARCHAR(30))";
-                        command.ExecuteNonQuery();
-
-                        // Add some default boat types
-                        command.CommandText = "INSERT INTO BoatType (BoatTypeName) VALUES ('Sailboat')";
-                        command.ExecuteNonQuery();
-
-                        command.CommandText = "INSERT INTO BoatType (BoatTypeName) VALUES ('Motorsailer')";
-                        command.ExecuteNonQuery();
-
-                        command.CommandText = "INSERT INTO BoatType (BoatTypeName) VALUES ('Kayak/Canoe')";
-                        command.ExecuteNonQuery();
-
-                        command.CommandText = "INSERT INTO BoatType (BoatTypeName) VALUES ('Other')";
-                        command.ExecuteNonQuery();
                     }
 
                     connection.Close();
