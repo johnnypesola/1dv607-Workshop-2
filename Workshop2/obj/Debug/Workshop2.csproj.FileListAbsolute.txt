@@ -6,3 +6,14 @@ C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\bin\Debug\Sys
 C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.csprojResolveAssemblyReference.cache
 C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.exe
 C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.pdb
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\bin\Debug\Workshop2.exe.config
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.exe
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.pdb
+<<<<<<< HEAD
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\bin\Debug\Workshop2.exe
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\bin\Debug\Workshop2.pdb
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\bin\Debug\System.Data.SQLite.dll
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\bin\Debug\System.Data.SQLite.xml
+C:\Users\Johanna Larsson\Desktop\Skolarbeten\Objektorienterad_analys_och_design\Workshop2\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.csprojResolveAssemblyReference.cache
+=======
+>>>>>>> master

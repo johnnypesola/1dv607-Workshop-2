@@ -49,7 +49,9 @@
   <ItemGroup>
     <Compile Include="BoatClubApp.cs" />
     <Compile Include="Controller\MemberController.cs" />
+    <Compile Include="Extensions\DALExtensions.cs" />
     <Compile Include="Model\BLL\Boat.cs" />
+    <Compile Include="Model\DAL\BoatDAL.cs" />
     <Compile Include="Model\DAL\DALBase.cs" />
     <Compile Include="Model\DAL\MemberDAL.cs" />
     <Compile Include="Model\BLL\Member.cs" />
