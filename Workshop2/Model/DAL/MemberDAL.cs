@@ -38,6 +38,36 @@ namespace Workshop2.Model.DAL
             }
         }
 
+        public void Update(Member member)
+        {
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "UPDATE Member SET MemberName = @MemberName, MemberPersonalNumber = @MemberPersonalNumber WHERE MemberID = @MemberId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@MemberName", member.Name);
+                        command.Parameters.AddWithValue("@MemberPersonalNumber", member.PersonalNumber);
+                        command.Parameters.AddWithValue("@MemberId", member.Id);
+
+                        // Add to DB
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
+        }
+
         public void Delete(Member member)
         {
             try
@@ -49,11 +79,12 @@ namespace Workshop2.Model.DAL
                     using (command = CreateCommand())
                     {
                         // Prepare statement
-                        command.CommandText = "DELETE FROM Member WHERE MemberPersonalNumber = @MemberPersonalNumber";
+                        command.CommandText = "DELETE FROM Member WHERE MemberPersonalNumber = @MemberPersonalNumber OR MemberID = @MemberId";
                         command.Prepare();
 
                         // Add parameters
                         command.Parameters.AddWithValue("@MemberPersonalNumber", member.PersonalNumber);
+                        command.Parameters.AddWithValue("@MemberId", member.Id);
 
                         // Remove from DB
                         command.ExecuteNonQuery();
@@ -77,11 +108,12 @@ namespace Workshop2.Model.DAL
                     using (command = CreateCommand())
                     {
                         // Prepare statement
-                        command.CommandText = "SELECT * FROM Member WHERE MemberPersonalNumber = @MemberPersonalNumber";
+                        command.CommandText = "SELECT * FROM Member WHERE MemberPersonalNumber = @MemberPersonalNumber OR MemberId = @MemberId";
                         command.Prepare();
 
                         // Add parameters
                         command.Parameters.AddWithValue("@MemberPersonalNumber", member.PersonalNumber);
+                        command.Parameters.AddWithValue("@MemberId", member.Id);
 
                         // Select from DB
                         using (SQLiteDataReader reader = command.ExecuteReader())
@@ -92,6 +124,7 @@ namespace Workshop2.Model.DAL
                                 // Create object from DB row data and return it
                                 return new Member
                                 {
+                                    Id = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Name = reader.GetString(reader.GetOrdinal("MemberName")),
                                     PersonalNumber = reader.GetString(reader.GetOrdinal("MemberPersonalNumber"))
                                 };
@@ -108,7 +141,7 @@ namespace Workshop2.Model.DAL
             }
         }
 
-        public IEnumerable<Member> GetAll()
+        public List<Member> GetAll()
         {
             try
             {
@@ -135,6 +168,7 @@ namespace Workshop2.Model.DAL
                                 // Create object from DB row data and add to return list
                                 memberReturnList.Add(new Member
                                 {
+                                    Id = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Name = reader.GetString(reader.GetOrdinal("MemberName")),
                                     PersonalNumber = reader.GetString(reader.GetOrdinal("MemberPersonalNumber"))
                                 });

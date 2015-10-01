@@ -19,5 +19,7 @@ namespace Workshop2.Model
         [Required(ErrorMessage = "Member personal number is required.")]
         [RegularExpression(@"^[0-9]{6}-[0-9]{4}$*", ErrorMessage = "Personal number must be in the following format: YYMMDD-NNNN")]
         public string PersonalNumber { get; set; }
+
+        public List<Boat> Boats { get; set; }
     }
 }
