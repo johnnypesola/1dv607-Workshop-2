@@ -12,7 +12,7 @@ namespace Workshop2.Extensions
         enum BoatType { Sailboat, Motorsailer, Kayak, Other };
 
         // Custom Safe SqlDataReader methods, with null checks
-        public static BoatType GetSafeString(this SQLiteDataReader reader, int columnIndex)
+        public static BoatType GetBoatTypeEnum(this SQLiteDataReader reader, int columnIndex)
         {
             string _returnValue = reader.GetString(columnIndex);
             
