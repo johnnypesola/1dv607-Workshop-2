@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Workshop2
 {
-    class DALExtensions
+    public static class DALExtensions
     {
-        enum BoatType { Sailboat, Motorsailer, Kayak, Other };
+        public enum BoatType { Sailboat, Motorsailer, Canoe, Other };
 
         // Custom enum reader method
         public static BoatType GetBoatTypeEnum(this SQLiteDataReader reader, int columnIndex)
         {
             string _returnValue = reader.GetString(columnIndex);
-            
+
             switch (_returnValue)
             {
                 case "Sailboat": return BoatType.Sailboat;
                 case "Motorsailer": return BoatType.Motorsailer;
-                case "Kayak": return BoatType.Kayak;
+                case "Kayak": return BoatType.Canoe;
                 case "Other": return BoatType.Other;
             }
 
