@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Workshop2.Extensions
+namespace Workshop2
 {
     class DALExtensions
     {
         enum BoatType { Sailboat, Motorsailer, Kayak, Other };
 
-        // Custom Safe SqlDataReader methods, with null checks
+        // Custom enum reader method
         public static BoatType GetBoatTypeEnum(this SQLiteDataReader reader, int columnIndex)
         {
             string _returnValue = reader.GetString(columnIndex);
