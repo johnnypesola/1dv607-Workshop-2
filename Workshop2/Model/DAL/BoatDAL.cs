@@ -46,8 +46,45 @@ namespace Workshop2.Model.DAL
         }
         public Boat GetBoat(Boat boat)
         {
-            //Add functionality
-            return boat;
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "SELECT * FROM Boat WHERE Id = @MemberId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@MemberId", boat.BoatId);
+
+                        // Select from DB
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            // While there are data rows in DB
+                            while (reader.Read())
+                            {
+                                // Create object from DB row data and return it
+                                return new Boat
+                                {
+                                    MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
+                                    Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
+                                    BoatType = reader.GetEnumerator(reader.GetOrdinal("BoatType"))  //TODO: make sure correct data is retrieved from DB
+                                };
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
         public void EditBoat(Boat boat)
         {
