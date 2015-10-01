@@ -21,6 +21,6 @@ namespace Workshop2.Model.BLL
         public decimal Length { get; set; }
 
         [Required(ErrorMessage = "Boat must have a type.")]
-        public BoatTypes BoatType { get; set; }
+        public string BoatType { get; set; }
     }
 }

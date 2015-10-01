@@ -55,7 +55,7 @@ namespace Workshop2.Model.DAL
                     using (command = CreateCommand())
                     {
                         // Prepare statement
-                        command.CommandText = "SELECT * FROM Boat WHERE Id = @MemberId";
+                        command.CommandText = "SELECT * FROM Boat WHERE MemberId = @MemberId";
                         command.Prepare();
 
                         // Add parameters
@@ -72,7 +72,7 @@ namespace Workshop2.Model.DAL
                                 {
                                     MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
-                                    BoatType = reader.GetEnumerator(reader.GetOrdinal("BoatType"))  //TODO: make sure correct data is retrieved from DB
+                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))  //TODO: make sure correct data is retrieved from DB
                                 };
                             }
                         }
