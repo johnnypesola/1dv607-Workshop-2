@@ -9,8 +9,6 @@ namespace Workshop2.Model
 {
     class Boat
     {
-        enum BoatType { Sailboat, Motorsailer, Canoe, Other };
-
         [Range(0, int.MaxValue, ErrorMessage = "Boat id is out of range.")]
         public int Id { get; set; }
     }
