@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Workshop2.Model
+namespace Workshop2.Model.BLL
 {
     class Boat
     {

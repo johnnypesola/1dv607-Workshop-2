@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Workshop2.Model;
+using Workshop2.Model.BLL;
 using Workshop2;
 
 namespace Workshop2.Model.DAL
@@ -15,7 +15,7 @@ namespace Workshop2.Model.DAL
         {
             try
             {
-                using (connection = CreateConnection())
+                using(connection = CreateConnection())
                 {
                     connection.Open();
 
@@ -36,7 +36,7 @@ namespace Workshop2.Model.DAL
 
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
                 throw new Exception(DAL_ERROR_MSG);
             }
@@ -68,7 +68,6 @@ namespace Workshop2.Model.DAL
                 throw new Exception(DAL_ERROR_MSG);
             }
         }
-
         public List<Boat> GetBoats(Boat boat)
         {
             try

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Workshop2
 {
     public static class DALExtensions
@@ -15,11 +14,18 @@ namespace Workshop2
         // Custom enum reader method
         public static BoatType GetBoatTypeEnum(this SQLiteDataReader reader, int columnIndex)
         {
-            // Get string to parse from SQLiteDataReader
-            string _stringToParse = reader.GetString(columnIndex);
+            string _returnValue = reader.GetString(columnIndex);
 
-            // Parse string to BoatType enum
-            return (BoatType)Enum.Parse(typeof(BoatType), _stringToParse);
+            switch (_returnValue)
+            {
+                case "Sailboat": return BoatType.Sailboat;
+                case "Motorsailer": return BoatType.Motorsailer;
+                case "Kayak": return BoatType.Canoe;
+                case "Other": return BoatType.Other;
+            }
+
+            return BoatType.Other;
         }
+
     }
 }
