@@ -18,6 +18,7 @@ namespace Workshop2
 
             // Create new member controller, it should do stuff with members
             memberController = new MemberController();
+            BoatClubApp.generateMenu();
         }
     }
 }
