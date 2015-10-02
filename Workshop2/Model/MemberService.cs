@@ -12,6 +12,7 @@ namespace Workshop2.Model
     {
     // Fields
         private MemberDAL _memberDAL;
+        private BoatDAL _boatDAL;
         private List<Member> _memberList;
 
     // Properties
@@ -21,6 +22,15 @@ namespace Workshop2.Model
             get
             {
                 return _memberDAL ?? (_memberDAL = new MemberDAL());
+            }
+        }
+
+        private BoatDAL BoatDAL
+        {
+            // Auto create object if needed
+            get
+            {
+                return _boatDAL ?? (_boatDAL = new BoatDAL());
             }
         }
 
@@ -34,11 +44,6 @@ namespace Workshop2.Model
         }
 
     // Private Methods
-        private Member FindMemberInLocalList(Member member)
-        {
-            // Match by id number or personal number
-            return MemberList.Find(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
-        }
 
         private void Add(Member member)
         {
@@ -96,12 +101,29 @@ namespace Workshop2.Model
             MemberDAL.Update(member);
 
             // Update local MemberList
-            MemberList[MemberList.IndexOf(FindMemberInLocalList(member))] = member;
+            MemberList[MemberList.IndexOf(Get(member))] = member;
         }
 
         private List<Boat> GetBoatsForMember(Member member)
         {
-            return new List<Boat>();
+            return BoatDAL.GetBoats(new Boat { MemberId = member.Id });
+        }
+
+        private void UpdateBoat(Member member, Boat boat)
+        {
+            // TODO Update boat in BoatDAL
+
+            // Update boat in local MembersList
+            int _index = member.Boats.IndexOf(GetBoat(member, boat));
+            member.Boats[_index] = boat;
+        }
+
+        private void AddBoat(Member member, Boat boat)
+        {
+            // TODO Add boat in BoatDAL
+
+            // Add boat in local MemberList
+            member.Boats.Add(boat);
         }
 
     // Public Methods
@@ -112,7 +134,6 @@ namespace Workshop2.Model
             {
                 Add(member);
             }
-            // Member should be updated
             else
             {
                 Update(member);
@@ -128,7 +149,7 @@ namespace Workshop2.Model
                 MemberDAL.Delete(member);
 
                 // Delete from local MemberList
-                MemberList.Remove(FindMemberInLocalList(member));
+                MemberList.Remove(Get(member));
 
                 //TODO Delete members boats in DB
             }
@@ -143,20 +164,59 @@ namespace Workshop2.Model
             Delete(new Member { Id = memberId });
         }
 
-        public Member Get(Member member)
-        {
-            return FindMemberInLocalList(member);
-        }
-
         public Member Get(int memberId)
         {
             return Get(new Member { Id = memberId });
+        }
+
+        public Member Get(Member member)
+        {
+            // Match by id number or personal number
+            return MemberList.Find(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
         }
 
         public List<Member> GetAll()
         {
             return MemberList;
         }
+
+
+        public void SaveBoat(Member member, Boat boat)
+        {
+            // If boat exists in member
+            if (GetBoat(member, boat) == null)
+            {
+                UpdateBoat(member, boat);
+            }
+            else
+            {
+                AddBoat(member, boat);
+            }
+        }
+
+        public void DeleteBoat(Member member, Boat boat)
+        {
+            //Todo Remove in Boat DAL
+
+            // Delete in local MemberList
+            member.Boats.Remove(boat);
+        }
+
+        public Boat GetBoat(int memberId, int boatId)
+        {
+            return GetBoat(new Member { Id = memberId }, new Boat { BoatId = boatId });
+        }
+
+        public Boat GetBoat(Member member, int boatId)
+        {
+            return GetBoat(member, new Boat { BoatId = boatId });
+        }
+
+        public Boat GetBoat(Member member, Boat boat)
+        {
+            return member.Boats.Find(x => (x.BoatId == boat.BoatId));
+        }
+
 
         public void TestAll() // Test all methods
         {
