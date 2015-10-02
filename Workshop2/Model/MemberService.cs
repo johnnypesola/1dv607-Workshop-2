@@ -12,6 +12,7 @@ namespace Workshop2.Model
     {
     // Fields
         private MemberDAL _memberDAL;
+        private BoatDAL _boatDAL;
         private List<Member> _memberList;
 
     // Properties
@@ -21,6 +22,15 @@ namespace Workshop2.Model
             get
             {
                 return _memberDAL ?? (_memberDAL = new MemberDAL());
+            }
+        }
+
+        private BoatDAL BoatDAL
+        {
+            // Auto create object if needed
+            get
+            {
+                return _boatDAL ?? (_boatDAL = new BoatDAL());
             }
         }
 
@@ -34,16 +44,11 @@ namespace Workshop2.Model
         }
 
     // Private Methods
-        private Member FindMemberInLocalList(Member member)
-        {
-            // Match by id number or personal number
-            return MemberList.Find(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
-        }
 
-        private void Add(Member member)
+        private void AddMember(Member member)
         {
             // Check if there is a member with this PersonalNumber already
-            if(Get(member) != null)
+            if(GetMember(member) != null)
             {
                 throw new Exception(String.Format("There is already a member with this personal number: {0}", member.PersonalNumber));
             }
@@ -74,12 +79,12 @@ namespace Workshop2.Model
             return memberReturnList;
         }
 
-        private void Update(Member member)
+        private void UpdateMember(Member member)
         {
             Member _memberFromList;
 
             // Get member from list searching by properties: Id, PersonalNumber
-            _memberFromList = Get(member);
+            _memberFromList = GetMember(member);
 
             // Check if there is no member to update
             if (_memberFromList == null) 
@@ -96,41 +101,63 @@ namespace Workshop2.Model
             MemberDAL.Update(member);
 
             // Update local MemberList
-            MemberList[MemberList.IndexOf(FindMemberInLocalList(member))] = member;
+            MemberList[MemberList.IndexOf(GetMember(member))] = member;
         }
 
         private List<Boat> GetBoatsForMember(Member member)
         {
-            return new List<Boat>();
+            return BoatDAL.GetBoats(new Boat { MemberId = member.Id });
+        }
+
+        private void UpdateBoat(Member member, Boat boat)
+        {
+            // Update boat in BoatDAL
+            BoatDAL.EditBoat(boat);
+
+            // Update boat in local MembersList
+            int _index = member.Boats.IndexOf(GetBoat(member, boat));
+            member.Boats[_index] = boat;
+        }
+
+        private void AddBoat(Member member, Boat boat)
+        {
+            // Add boat in BoatDAL
+            BoatDAL.RegisterNewBoat(boat, member);
+
+            // Add boat in local MemberList
+            member.Boats.Add(boat);
         }
 
     // Public Methods
-        public void Save(Member member)
+        public void SaveMember(Member member)
         {
             // If a new member should be added
             if (member.Id == 0)
             {
-                Add(member);
+                AddMember(member);
             }
-            // Member should be updated
             else
             {
-                Update(member);
+                UpdateMember(member);
             }
         }
 
-        public void Delete(Member member)
+        public void DeleteMember(Member member)
         {
             // Check if there is a member with this PersonalNumber
             if (MemberDAL.Get(member) != null)
             {
-                // Delete member from DB
+                // Delete boats in DAL
+                foreach (Boat boat in member.Boats)
+                {
+                    BoatDAL.DeleteBoat(boat);
+                }
+
+                // Delete member in DAL
                 MemberDAL.Delete(member);
 
                 // Delete from local MemberList
-                MemberList.Remove(FindMemberInLocalList(member));
-
-                //TODO Delete members boats in DB
+                MemberList.Remove(GetMember(member));
             }
             else
             {
@@ -138,25 +165,71 @@ namespace Workshop2.Model
             }
         }
 
-        public void Delete(int memberId)
+        public void DeleteMember(int memberId)
         {
-            Delete(new Member { Id = memberId });
+            DeleteMember(new Member { Id = memberId });
         }
 
-        public Member Get(Member member)
+        public Member GetMember(int memberId)
         {
-            return FindMemberInLocalList(member);
+            return GetMember(new Member { Id = memberId });
         }
 
-        public Member Get(int memberId)
+        public Member GetMember(Member member)
         {
-            return Get(new Member { Id = memberId });
+            // Match by id number or personal number
+            return MemberList.Find(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
         }
 
-        public List<Member> GetAll()
+        public List<Member> GetAllMembers()
         {
             return MemberList;
         }
+
+
+        public void SaveBoat(Member member, Boat boat)
+        {
+            // If boat does not exist in member
+            if (GetBoat(member, boat) == null)
+            {
+                AddBoat(member, boat);
+            }
+            else
+            {
+                UpdateBoat(member, boat);
+            }
+        }
+
+        public void DeleteBoat(Member member, Boat boat)
+        {
+            // Delete Boat in BoatDAL
+            BoatDAL.DeleteBoat(boat);
+
+            // Delete in local MemberList
+            member.Boats.Remove(boat);
+        }
+
+        public Boat GetBoat(int memberId, int boatId)
+        {
+            return GetBoat(new Member { Id = memberId }, new Boat { BoatId = boatId });
+        }
+
+        public Boat GetBoat(Member member, int boatId)
+        {
+            return GetBoat(member, new Boat { BoatId = boatId });
+        }
+
+        public Boat GetBoat(Member member, Boat boat)
+        {
+            // Return null if the boat has no valid id. It's a new boat perhaps?
+            if (boat.BoatId == 0)
+            {
+                return null;
+            }
+
+            return member.Boats.Find(x => (x.BoatId == boat.BoatId));
+        }
+
 
         public void TestAll() // Test all methods
         {
@@ -168,16 +241,16 @@ namespace Workshop2.Model
             };
 
             // Add test member to database
-            Add(member);
+            AddMember(member);
 
             // Get test member from database
-            Get(member);
+            GetMember(member);
 
             // Delete member from database
-            Delete(member);
+            DeleteMember(member);
 
             // Get all members from database
-            GetAll();
+            GetAllMembers();
         }
     }
 }
