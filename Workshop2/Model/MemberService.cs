@@ -45,10 +45,10 @@ namespace Workshop2.Model
 
     // Private Methods
 
-        private void Add(Member member)
+        private void AddMember(Member member)
         {
             // Check if there is a member with this PersonalNumber already
-            if(Get(member) != null)
+            if(GetMember(member) != null)
             {
                 throw new Exception(String.Format("There is already a member with this personal number: {0}", member.PersonalNumber));
             }
@@ -79,12 +79,12 @@ namespace Workshop2.Model
             return memberReturnList;
         }
 
-        private void Update(Member member)
+        private void UpdateMember(Member member)
         {
             Member _memberFromList;
 
             // Get member from list searching by properties: Id, PersonalNumber
-            _memberFromList = Get(member);
+            _memberFromList = GetMember(member);
 
             // Check if there is no member to update
             if (_memberFromList == null) 
@@ -101,7 +101,7 @@ namespace Workshop2.Model
             MemberDAL.Update(member);
 
             // Update local MemberList
-            MemberList[MemberList.IndexOf(Get(member))] = member;
+            MemberList[MemberList.IndexOf(GetMember(member))] = member;
         }
 
         private List<Boat> GetBoatsForMember(Member member)
@@ -111,7 +111,8 @@ namespace Workshop2.Model
 
         private void UpdateBoat(Member member, Boat boat)
         {
-            // TODO Update boat in BoatDAL
+            // Update boat in BoatDAL
+            BoatDAL.EditBoat(boat);
 
             // Update boat in local MembersList
             int _index = member.Boats.IndexOf(GetBoat(member, boat));
@@ -120,38 +121,43 @@ namespace Workshop2.Model
 
         private void AddBoat(Member member, Boat boat)
         {
-            // TODO Add boat in BoatDAL
+            // Add boat in BoatDAL
+            BoatDAL.RegisterNewBoat(boat, member);
 
             // Add boat in local MemberList
             member.Boats.Add(boat);
         }
 
     // Public Methods
-        public void Save(Member member)
+        public void SaveMember(Member member)
         {
             // If a new member should be added
             if (member.Id == 0)
             {
-                Add(member);
+                AddMember(member);
             }
             else
             {
-                Update(member);
+                UpdateMember(member);
             }
         }
 
-        public void Delete(Member member)
+        public void DeleteMember(Member member)
         {
             // Check if there is a member with this PersonalNumber
             if (MemberDAL.Get(member) != null)
             {
-                // Delete member from DB
+                // Delete boats in DAL
+                foreach (Boat boat in member.Boats)
+                {
+                    BoatDAL.DeleteBoat(boat);
+                }
+
+                // Delete member in DAL
                 MemberDAL.Delete(member);
 
                 // Delete from local MemberList
-                MemberList.Remove(Get(member));
-
-                //TODO Delete members boats in DB
+                MemberList.Remove(GetMember(member));
             }
             else
             {
@@ -159,23 +165,23 @@ namespace Workshop2.Model
             }
         }
 
-        public void Delete(int memberId)
+        public void DeleteMember(int memberId)
         {
-            Delete(new Member { Id = memberId });
+            DeleteMember(new Member { Id = memberId });
         }
 
-        public Member Get(int memberId)
+        public Member GetMember(int memberId)
         {
-            return Get(new Member { Id = memberId });
+            return GetMember(new Member { Id = memberId });
         }
 
-        public Member Get(Member member)
+        public Member GetMember(Member member)
         {
             // Match by id number or personal number
             return MemberList.Find(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
         }
 
-        public List<Member> GetAll()
+        public List<Member> GetAllMembers()
         {
             return MemberList;
         }
@@ -183,20 +189,21 @@ namespace Workshop2.Model
 
         public void SaveBoat(Member member, Boat boat)
         {
-            // If boat exists in member
+            // If boat does not exist in member
             if (GetBoat(member, boat) == null)
             {
-                UpdateBoat(member, boat);
+                AddBoat(member, boat);
             }
             else
             {
-                AddBoat(member, boat);
+                UpdateBoat(member, boat);
             }
         }
 
         public void DeleteBoat(Member member, Boat boat)
         {
-            //Todo Remove in Boat DAL
+            // Delete Boat in BoatDAL
+            BoatDAL.DeleteBoat(boat);
 
             // Delete in local MemberList
             member.Boats.Remove(boat);
@@ -214,6 +221,12 @@ namespace Workshop2.Model
 
         public Boat GetBoat(Member member, Boat boat)
         {
+            // Return null if the boat has no valid id. It's a new boat perhaps?
+            if (boat.BoatId == 0)
+            {
+                return null;
+            }
+
             return member.Boats.Find(x => (x.BoatId == boat.BoatId));
         }
 
@@ -228,16 +241,16 @@ namespace Workshop2.Model
             };
 
             // Add test member to database
-            Add(member);
+            AddMember(member);
 
             // Get test member from database
-            Get(member);
+            GetMember(member);
 
             // Delete member from database
-            Delete(member);
+            DeleteMember(member);
 
             // Get all members from database
-            GetAll();
+            GetAllMembers();
         }
     }
 }
