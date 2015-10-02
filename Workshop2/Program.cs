@@ -17,7 +17,7 @@ namespace Workshop2
             Model.DAL.DALBase.SetupTables();
 
             // Create new member controller, it should do stuff with members
-            memberController = new MemberController();
+            //memberController = new MemberController();
             BoatClubApp.generateMenu();
         }
     }

@@ -96,7 +96,7 @@ namespace Workshop2.Model.DAL
                                 {
                                     MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
-                                    BoatType = reader.GetBoatTypeEnum(reader.GetOrdinal("BoatType"))
+                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))
                                 };
                             }
                         }
