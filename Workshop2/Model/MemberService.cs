@@ -11,6 +11,7 @@ namespace Workshop2.Model
     {
     // Fields
         private MemberDAL _memberDAL;
+        private BoatDAL _boatDAL;
         private List<Member> _memberList;
 
     // Properties
@@ -20,6 +21,15 @@ namespace Workshop2.Model
             get
             {
                 return _memberDAL ?? (_memberDAL = new MemberDAL());
+            }
+        }
+
+        private BoatDAL BoatDAL
+        {
+            // Auto create object if needed
+            get
+            {
+                return _boatDAL ?? (_boatDAL = new BoatDAL());
             }
         }
 
@@ -95,9 +105,7 @@ namespace Workshop2.Model
 
         private List<Boat> GetBoatsForMember(Member member)
         {
-            // Todo get boats from BoatDAL
-
-            return new List<Boat>();
+            return BoatDAL.GetBoats(new Boat { MemberId = member.Id });
         }
 
         private void UpdateBoat(Member member, Boat boat)
@@ -195,17 +203,17 @@ namespace Workshop2.Model
 
         public Boat GetBoat(int memberId, int boatId)
         {
-            return GetBoat(new Member { Id = memberId }, new Boat { Id = boatId });
+            return GetBoat(new Member { Id = memberId }, new Boat { BoatId = boatId });
         }
 
         public Boat GetBoat(Member member, int boatId)
         {
-            return GetBoat(member, new Boat { Id = boatId });
+            return GetBoat(member, new Boat { BoatId = boatId });
         }
 
         public Boat GetBoat(Member member, Boat boat)
         {
-            return member.Boats.Find(x => (x.Id == boat.Id));
+            return member.Boats.Find(x => (x.BoatId == boat.BoatId));
         }
 
 

@@ -31,7 +31,12 @@ namespace Workshop2.View
             //Write out members in console
             foreach (Member member in members) 
             {
-                Console.WriteLine("{0} {1} {2}", member.Id, member.Name, member.PersonalNumber);
+                Console.WriteLine("{0} {1} {2} {3}", member.Id, member.Name, member.PersonalNumber, member.Boats.Count);
+
+                foreach(Boat boat in member.Boats)
+                {
+                    Console.WriteLine("    {0} {1}", boat.BoatId, boat.Length);
+                }
             }
 
             Member otherMember = MemberService.Get(1);

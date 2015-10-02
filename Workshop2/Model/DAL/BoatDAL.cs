@@ -4,7 +4,8 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Workshop2.Model.BLL;
+using Workshop2.Model;
+using Workshop2;
 
 namespace Workshop2.Model.DAL
 {
@@ -14,7 +15,7 @@ namespace Workshop2.Model.DAL
         {
             try
             {
-                using(connection = CreateConnection())
+                using (connection = CreateConnection())
                 {
                     connection.Open();
 
@@ -35,19 +36,45 @@ namespace Workshop2.Model.DAL
 
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception(DAL_ERROR_MSG);
             }
         }
         public void DeleteBoat(Boat boat)
         {
-            //Add functionality
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "DELETE FROM Boat WHERE BoatId = @BoatId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@MemberId", boat.BoatId);
+
+                        // Remove from DB
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
-        public Boat GetBoat(Boat boat)
+
+        public List<Boat> GetBoats(Boat boat)
         {
             try
             {
+                List<Boat> _returnBoatList = new List<Boat>(10);
+
                 using (connection = CreateConnection())
                 {
                     connection.Open();
@@ -68,18 +95,20 @@ namespace Workshop2.Model.DAL
                             while (reader.Read())
                             {
                                 // Create object from DB row data and return it
-                                return new Boat
+                                _returnBoatList.Add(new Boat
                                 {
                                     MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
-                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))  //TODO: make sure correct data is retrieved from DB
-                                };
+                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))  //TODO: fix extension method to work with DB data
+                                });
                             }
                         }
                     }
                 }
 
-                return null;
+                _returnBoatList.TrimExcess();
+
+                return _returnBoatList;
             }
             catch (Exception)
             {
@@ -88,7 +117,32 @@ namespace Workshop2.Model.DAL
         }
         public void EditBoat(Boat boat)
         {
-            //Add functionality
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "UPDATE Boat SET Length = @BoatLength, BoatType = @BoatType WHERE BoatId = @BoatId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@BoatLength", boat.Length);
+                        command.Parameters.AddWithValue("@BoatType", boat.BoatType); //TODO: fix extension method to work with DB data
+                        command.Parameters.AddWithValue("@BoatId", boat.BoatId);
+
+                        // Add to DB
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
         }
     }
 }

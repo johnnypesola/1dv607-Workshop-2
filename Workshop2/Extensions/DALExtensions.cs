@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Workshop2
 {
-    class DALExtensions
+    public static class DALExtensions
     {
-        enum BoatType { Sailboat, Motorsailer, Canoe, Other };
+        public enum BoatType { Sailboat, Motorsailer, Canoe, Other };
 
         // Custom enum reader method
         public static BoatType GetBoatTypeEnum(this SQLiteDataReader reader, int columnIndex)
