@@ -19,6 +19,6 @@ namespace Workshop2.Model.BLL
         public decimal Length { get; set; }
 
         [Required(ErrorMessage = "Boat must have a type.")]
-        public string BoatType { get; set; }
+        public Workshop2.DALExtensions.BoatType BoatType { get; set; }
     }
 }

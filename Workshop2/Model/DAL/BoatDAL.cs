@@ -96,7 +96,7 @@ namespace Workshop2.Model.DAL
                                 {
                                     MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
-                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))  //TODO: fix extension method to work with DB data
+                                    BoatType = reader.GetBoatTypeEnum(reader.GetOrdinal("BoatType"))
                                 };
                             }
                         }
@@ -126,7 +126,7 @@ namespace Workshop2.Model.DAL
 
                         // Add parameters
                         command.Parameters.AddWithValue("@BoatLength", boat.Length);
-                        command.Parameters.AddWithValue("@BoatType", boat.BoatType); //TODO: fix extension method to work with DB data
+                        command.Parameters.AddWithValue("@BoatType", boat.BoatType);
                         command.Parameters.AddWithValue("@BoatId", boat.BoatId);
 
                         // Add to DB
