@@ -45,6 +45,31 @@ namespace Workshop2.Model
 
     // Private Methods
 
+        private List<Member> GetAllFromDAL()
+        {
+            // Get members from DB
+            List<Member> memberReturnList = MemberDAL.GetAll();
+
+            // If there wasn't any members in DB
+            if (memberReturnList.Count() == 0)
+            {
+                throw new Exception("No members found.");
+            }
+
+            // Get boats for members
+            foreach (Member member in memberReturnList)
+            {
+                member.Boats = GetBoatsForMember(member);
+            }
+
+            return memberReturnList;
+        }
+
+        private List<Boat> GetBoatsForMember(Member member)
+        {
+            return BoatDAL.GetBoats(new Boat { MemberId = member.Id });
+        }
+
         private void AddMember(Member member)
         {
             // Check if there is a member with this PersonalNumber already
@@ -58,25 +83,6 @@ namespace Workshop2.Model
 
             // Add member to local Memberlist
             MemberList.Add(member);
-        }
-
-        private List<Member> GetAllFromDAL()
-        {
-            // Get members from DB
-            List<Member> memberReturnList = MemberDAL.GetAll();
-
-            // If there wasn't any members in DB
-            if (memberReturnList.Count() == 0)
-            {
-                throw new Exception("No members found.");
-            }
-
-            // Get boats for members
-            foreach (Member member in memberReturnList) {
-                member.Boats = GetBoatsForMember(member);
-            }
-
-            return memberReturnList;
         }
 
         private void UpdateMember(Member member)
@@ -104,9 +110,13 @@ namespace Workshop2.Model
             MemberList[MemberList.IndexOf(GetMember(member))] = member;
         }
 
-        private List<Boat> GetBoatsForMember(Member member)
+        private void AddBoat(Member member, Boat boat)
         {
-            return BoatDAL.GetBoats(new Boat { MemberId = member.Id });
+            // Add boat in BoatDAL
+            BoatDAL.RegisterNewBoat(boat, member);
+
+            // Add boat in local MemberList
+            member.Boats.Add(boat);
         }
 
         private void UpdateBoat(Member member, Boat boat)
@@ -117,15 +127,6 @@ namespace Workshop2.Model
             // Update boat in local MembersList
             int _index = member.Boats.IndexOf(GetBoat(member, boat));
             member.Boats[_index] = boat;
-        }
-
-        private void AddBoat(Member member, Boat boat)
-        {
-            // Add boat in BoatDAL
-            BoatDAL.RegisterNewBoat(boat, member);
-
-            // Add boat in local MemberList
-            member.Boats.Add(boat);
         }
 
     // Public Methods
