@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Workshop2.View;
+
 
 namespace Workshop2
 {
@@ -11,15 +11,15 @@ namespace Workshop2
     {
         public static string[] members;
         public static string key;
-        private MemberView _memberView;
-        private MemberView MemberView
-        {
-            // Auto create object if needed
-            get
-            {
-                return _memberView ?? (_memberView = new MemberView());
-            }
-        }
+        //private MemberView _memberView;
+        //private MemberView MemberView
+        //{
+        //    // Auto create object if needed
+        //    get
+        //    {
+        //        return _memberView ?? (_memberView = new MemberView());
+        //    }
+        //}
         public void generateMenu()
         {
             members = new string[] { "Matt", "Joanne", "Robert" };
@@ -112,7 +112,7 @@ namespace Workshop2
         private void PrintCompactList()
         {
             Console.WriteLine("All members:");
-            MemberView.WriteOutMembersFromDB();
+           // MemberView.WriteOutMembersFromDB();
             Console.WriteLine("Pick a member or choose B to go back");
         }
         static void PrintVerboseList()
