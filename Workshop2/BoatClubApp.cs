@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workshop2.Model;
+using Workshop2.Model.BLL;
 
 
 namespace Workshop2
@@ -11,15 +13,14 @@ namespace Workshop2
     {
         public static string[] members;
         public static string key;
-        //private MemberView _memberView;
-        //private MemberView MemberView
-        //{
-        //    // Auto create object if needed
-        //    get
-        //    {
-        //        return _memberView ?? (_memberView = new MemberView());
-        //    }
-        //}
+        private List<Member> _members;
+
+        //Constructor
+        public BoatClubApp()
+        {
+            MemberService ms = new MemberService();
+            _members = ms.MemberList;
+        }
         public void generateMenu()
         {
             members = new string[] { "Matt", "Joanne", "Robert" };
@@ -112,12 +113,27 @@ namespace Workshop2
         private void PrintCompactList()
         {
             Console.WriteLine("All members:");
-           // MemberView.WriteOutMembersFromDB();
+            int memberCount = 1;
+            foreach (Member member in _members){
+                Console.WriteLine("{0}. {1}, {2}", memberCount, member.Name, member.PersonalNumber);
+                memberCount++;
+            }
             Console.WriteLine("Pick a member or choose B to go back");
         }
-        static void PrintVerboseList()
+        private void PrintVerboseList()
         {
-            Console.WriteLine("Verbose List Printed");
+            Console.WriteLine("Verbose List");
+            int memberCount = 1;
+            foreach (Member member in _members)
+            {
+                Console.WriteLine("{0}. {1}, {2}", memberCount, member.Name, member.PersonalNumber);
+                foreach (Boat boat in member.Boats)
+                {
+                    Console.WriteLine(boat.BoatType);
+                }
+                memberCount++;
+            }
+
         }
         static void AddNewMember()
         {

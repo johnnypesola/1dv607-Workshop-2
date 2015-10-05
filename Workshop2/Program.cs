@@ -27,7 +27,6 @@ namespace Workshop2
             // Uncomment this if you want to reset all the data in database to defaults.
             Model.DAL.DALBase.SetupTables();
             BoatClubApp bc = new BoatClubApp();
-            bc.generateMenu();
             //MemberController memberController;
             // Uncomment this if you want to reset all the data in database to defaults.
             Model.DAL.DALBase.SetupTables();
