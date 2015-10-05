@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workshop2.View;
 
 namespace Workshop2
 {
@@ -10,7 +11,16 @@ namespace Workshop2
     {
         public static string[] members;
         public static string key;
-        public static void generateMenu()
+        private MemberView _memberView;
+        private MemberView MemberView
+        {
+            // Auto create object if needed
+            get
+            {
+                return _memberView ?? (_memberView = new MemberView());
+            }
+        }
+        public void generateMenu()
         {
             members = new string[] { "Matt", "Joanne", "Robert" };
             do
@@ -99,24 +109,30 @@ namespace Workshop2
         {
             key = Console.ReadLine().ToString();
         }
-        static void PrintCompactList()
+        private void PrintCompactList()
         {
             Console.WriteLine("All members:");
-            int i = 1;
-            foreach (string mem in members)
-            {
-                Console.WriteLine("{0}. {1}", i, mem);
-                i++;
-            }
+            MemberView.WriteOutMembersFromDB();
             Console.WriteLine("Pick a member or choose B to go back");
         }
         static void PrintVerboseList()
         {
-
+            Console.WriteLine("Verbose List Printed");
         }
         static void AddNewMember()
         {
-
+            Console.WriteLine("Add new member");
+            Console.WriteLine("Ange namn");
+            string namn = Console.ReadLine().ToString();
+            //Validate name
+            if (true)
+            {
+                Console.WriteLine("Du angav namn: {0}", namn);
+            }
+            else
+            {
+                Console.WriteLine("Ogiltigt format på namn: {0}", namn);
+            }
         }
     }
 }

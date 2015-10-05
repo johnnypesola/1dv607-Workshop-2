@@ -32,9 +32,8 @@ namespace Workshop2.View
             {
                 Console.WriteLine("{0} {1}", member.Name, member.PersonalNumber);
             }
-
             // Wait for user input before app closes
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
