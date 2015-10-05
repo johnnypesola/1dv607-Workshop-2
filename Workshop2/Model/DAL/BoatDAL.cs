@@ -22,7 +22,7 @@ namespace Workshop2.Model.DAL
                     using (command = CreateCommand())
                     {
                         // Prepare statement
-                        command.CommandText = "INSERT INTO Boat(MemberId, Length, BoatType) VALUES(@MemberId, @BoatLength, @BoatType)";
+                        command.CommandText = "INSERT INTO Boat(MemberId, BoatLength, BoatType) VALUES(@MemberId, @BoatLength, @BoatType)";
                         command.Prepare();
 
                         // Add parameters
@@ -56,7 +56,7 @@ namespace Workshop2.Model.DAL
                         command.Prepare();
 
                         // Add parameters
-                        command.Parameters.AddWithValue("@MemberId", boat.BoatId);
+                        command.Parameters.AddWithValue("@BoatId", boat.BoatId);
 
                         // Remove from DB
                         command.ExecuteNonQuery();
@@ -68,10 +68,12 @@ namespace Workshop2.Model.DAL
                 throw new Exception(DAL_ERROR_MSG);
             }
         }
-        public Boat GetBoat(Boat boat)
+        public List<Boat> GetBoats(Boat boat)
         {
             try
             {
+                List<Boat> _returnBoatList = new List<Boat>(10);
+
                 using (connection = CreateConnection())
                 {
                     connection.Open();
@@ -83,7 +85,7 @@ namespace Workshop2.Model.DAL
                         command.Prepare();
 
                         // Add parameters
-                        command.Parameters.AddWithValue("@MemberId", boat.BoatId);
+                        command.Parameters.AddWithValue("@MemberId", boat.MemberId);
 
                         // Select from DB
                         using (SQLiteDataReader reader = command.ExecuteReader())
@@ -92,18 +94,21 @@ namespace Workshop2.Model.DAL
                             while (reader.Read())
                             {
                                 // Create object from DB row data and return it
-                                return new Boat
+                                _returnBoatList.Add(new Boat
                                 {
+                                    BoatId = reader.GetInt32(reader.GetOrdinal("BoatId")),
                                     MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
                                     Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
                                     BoatType = reader.GetString(reader.GetOrdinal("BoatType"))  //TODO: fix extension method to work with DB data
-                                };
+                                });
                             }
                         }
                     }
                 }
 
-                return null;
+                _returnBoatList.TrimExcess();
+
+                return _returnBoatList;
             }
             catch (Exception)
             {
@@ -121,7 +126,7 @@ namespace Workshop2.Model.DAL
                     using (command = CreateCommand())
                     {
                         // Prepare statement
-                        command.CommandText = "UPDATE Boat SET Length = @BoatLength, BoatType = @BoatType WHERE BoatId = @BoatId";
+                        command.CommandText = "UPDATE Boat SET BoatLength = @BoatLength, BoatType = @BoatType WHERE BoatId = @BoatId";
                         command.Prepare();
 
                         // Add parameters
