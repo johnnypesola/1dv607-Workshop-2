@@ -60,14 +60,14 @@ namespace Workshop2
             Console.ReadKey();
         }
 
-        private static void ChooseMember()
+        private void ChooseMember()
         {
             SetKey();
-            for (int i = 1; i <= members.Length; i++)
+            for (int i = 1; i <= _members.Count; i++)
             {
                 if (key == i.ToString())
                 {
-                    Console.WriteLine("Okej, du valde nummer {0} som heter {1}", i, members[i-1]);
+                    Console.WriteLine("Okej, du valde nummer {0} som heter {1}", i, _members[i-1].Name);
                 }
             }
         }
