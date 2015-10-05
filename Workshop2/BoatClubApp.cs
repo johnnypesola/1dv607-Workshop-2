@@ -11,7 +11,6 @@ namespace Workshop2
 {
     class BoatClubApp
     {
-        public static string[] members;
         public static string key;
         private List<Member> _members;
 
@@ -23,7 +22,6 @@ namespace Workshop2
         }
         public void generateMenu()
         {
-            members = new string[] { "Matt", "Joanne", "Robert" };
             do
             {
                 PrintMainMenu();
@@ -41,6 +39,7 @@ namespace Workshop2
                                 break;
                             case "2":
                                 PrintVerboseList();
+                                ChooseMember();
                                 break;
                             case "3":
                                 AddNewMember();
@@ -67,24 +66,40 @@ namespace Workshop2
             {
                 if (key == i.ToString())
                 {
-                    Console.WriteLine("Okej, du valde nummer {0} som heter {1}", i, _members[i-1].Name);
+                    printMemberInfo(_members[i-1]);
+                    PrintIndividialMenu();
+                    ReadIndividualMenu();
                 }
             }
         }
-        private static void PrintSingleMember(int memberID){
-
-        }
-        private void ReadInput(string key)
-        {
-
-        }
-        static void PrintMainMenu()
+        private void PrintMainMenu()
         {
             Console.WriteLine("Welcome to the happy boat club!");
             Console.WriteLine("1. View compact list");
             Console.WriteLine("2. View verbose list");
             Console.WriteLine("3. Add new member");
             Console.WriteLine("X. Exit the application");
+        }
+        private void PrintIndividialMenu()
+        {
+            Console.WriteLine("Press:");
+            Console.WriteLine("C to change member info");
+            Console.WriteLine("B to go back");
+            Console.WriteLine("F to add boat");
+            Console.WriteLine("Or type boat number to change boat");
+        }
+        private void ReadIndividualMenu()
+        {
+            SetKey();
+
+            if (key.ToUpper() == "C")
+            {
+                Console.WriteLine("Change member info");
+            }
+            else if (key.ToUpper() == "F")
+            {
+                Console.WriteLine("Add boat");
+            }
         }
         static bool ReadMainMenuChoise(string key)
         {
@@ -93,12 +108,12 @@ namespace Workshop2
                 Console.WriteLine("You choosed Compact List");
                 return true;
             }
-            if (key == "2")
+            else if (key == "2")
             {
                 Console.WriteLine("You choosed Verbose List");
                 return true;
             }
-            if (key == "3")
+            else if (key == "3")
             {
                 Console.WriteLine("You choosed Add new member");
                 return true;
@@ -127,15 +142,17 @@ namespace Workshop2
             foreach (Member member in _members)
             {
                 Console.WriteLine("{0}. {1}, {2}", memberCount, member.Name, member.PersonalNumber);
+                int boatCount = 1;
                 foreach (Boat boat in member.Boats)
                 {
                     Console.WriteLine(boat.BoatType);
+                    boatCount++;
                 }
                 memberCount++;
             }
 
         }
-        static void AddNewMember()
+        private void AddNewMember()
         {
             Console.WriteLine("Add new member");
             Console.WriteLine("Ange namn");
@@ -149,6 +166,26 @@ namespace Workshop2
             {
                 Console.WriteLine("Ogiltigt format på namn: {0}", namn);
             }
+        }
+        private void printMemberInfo(Member m)
+        {
+            Console.WriteLine(m.Name);
+            Console.WriteLine(m.PersonalNumber);
+            Console.WriteLine("Boats:");
+            int boatCount = 1;
+            foreach (Boat b in m.Boats)
+            {
+                Console.WriteLine("{0}. {1}, {2} meters long", boatCount, b.BoatType, b.BoatLength);
+                boatCount++;
+            }
+            if (m.Boats.Count == 0)
+            {
+                Console.WriteLine("This person has no boats");
+            }
+        }
+        private void changeMember()
+        {
+
         }
     }
 }
