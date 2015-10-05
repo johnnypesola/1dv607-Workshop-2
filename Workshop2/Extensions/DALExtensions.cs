@@ -20,7 +20,7 @@ namespace Workshop2
             {
                 case "Sailboat": return BoatType.Sailboat;
                 case "Motorsailer": return BoatType.Motorsailer;
-                case "Kayak": return BoatType.Canoe;
+                case "Canoe": return BoatType.Canoe;
                 case "Other": return BoatType.Other;
             }
 

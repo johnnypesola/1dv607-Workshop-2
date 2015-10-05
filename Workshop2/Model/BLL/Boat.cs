@@ -16,7 +16,7 @@ namespace Workshop2.Model.BLL
         public int MemberId { get; set; }
 
         [Required(ErrorMessage = "Boat must have a length.")]
-        public decimal Length { get; set; }
+        public decimal BoatLength { get; set; }
 
         [Required(ErrorMessage = "Boat must have a type.")]
         public string BoatType { get; set; }

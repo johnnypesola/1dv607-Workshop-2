@@ -27,7 +27,7 @@ namespace Workshop2.Model.DAL
 
                         // Add parameters
                         command.Parameters.AddWithValue("@MemberId", member.Id);
-                        command.Parameters.AddWithValue("@BoatLength", boat.Length);
+                        command.Parameters.AddWithValue("@BoatLength", boat.BoatLength);
                         command.Parameters.AddWithValue("@BoatType", boat.BoatType);
 
                         // Add to DB
@@ -98,8 +98,8 @@ namespace Workshop2.Model.DAL
                                 {
                                     BoatId = reader.GetInt32(reader.GetOrdinal("BoatId")),
                                     MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
-                                    Length = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
-                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))  //TODO: fix extension method to work with DB data
+                                    BoatLength = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
+                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))
                                 });
                             }
                         }
@@ -109,6 +109,49 @@ namespace Workshop2.Model.DAL
                 _returnBoatList.TrimExcess();
 
                 return _returnBoatList;
+            }
+            catch (Exception)
+            {
+                throw new Exception(DAL_ERROR_MSG);
+            }
+        }
+        public Boat GetBoat(Boat boat)
+        {
+            try
+            {
+                using (connection = CreateConnection())
+                {
+                    connection.Open();
+
+                    using (command = CreateCommand())
+                    {
+                        // Prepare statement
+                        command.CommandText = "SELECT * FROM Boat WHERE BoatId = @BoatId";
+                        command.Prepare();
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@BoatId", boat.BoatId);
+
+                        // Select from DB
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            // While there are data rows in DB
+                            while (reader.Read())
+                            {
+                                // Create object from DB row data and return it
+                                return new Boat
+                                {
+                                    BoatId = reader.GetInt32(reader.GetOrdinal("BoatId")),
+                                    MemberId = reader.GetInt32(reader.GetOrdinal("MemberId")),
+                                    BoatLength = reader.GetDecimal(reader.GetOrdinal("BoatLength")),
+                                    BoatType = reader.GetString(reader.GetOrdinal("BoatType"))
+                                };
+                            }
+                        }
+                    }
+                }
+
+                return null;
             }
             catch (Exception)
             {
@@ -130,8 +173,8 @@ namespace Workshop2.Model.DAL
                         command.Prepare();
 
                         // Add parameters
-                        command.Parameters.AddWithValue("@BoatLength", boat.Length);
-                        command.Parameters.AddWithValue("@BoatType", boat.BoatType); //TODO: fix extension method to work with DB data
+                        command.Parameters.AddWithValue("@BoatLength", boat.BoatLength);
+                        command.Parameters.AddWithValue("@BoatType", boat.BoatType);
                         command.Parameters.AddWithValue("@BoatId", boat.BoatId);
 
                         // Add to DB
