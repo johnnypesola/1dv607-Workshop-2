@@ -115,6 +115,9 @@ namespace Workshop2.Model
             // Add boat in BoatDAL
             BoatDAL.RegisterNewBoat(boat, member);
 
+            // Add member id to boat, in case this is not done.
+            boat.MemberId = member.Id;
+
             // Add boat in local MemberList
             member.Boats.Add(boat);
         }

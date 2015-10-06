@@ -9,13 +9,13 @@ using Workshop2.View;
 
 namespace Workshop2
 {
-    class BoatClubApp
+    class BoatClubController
     {
         private MemberService _memberService;
         private MenuView _menuView;
 
         // Constructor
-        public BoatClubApp()
+        public BoatClubController()
         {
             _memberService = new MemberService();
             _menuView = new MenuView();
