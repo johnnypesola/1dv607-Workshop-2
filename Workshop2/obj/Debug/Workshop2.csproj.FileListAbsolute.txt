@@ -13,3 +13,4 @@ C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\bin\Debug\Wor
 C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\bin\Debug\System.Data.SQLite.dll
 C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\bin\Debug\System.Data.SQLite.xml
 C:\Users\jopes\Documents\GitHub\1dv607\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.csprojResolveAssemblyReference.cache
+C:\Users\Matilda\Documents\GitHub\1dv607-Workshop-2\Workshop2\obj\Debug\Workshop2.csprojResolveAssemblyReference.cache

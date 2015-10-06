@@ -117,7 +117,7 @@ namespace Workshop2.View
                 Console.Clear();
 
                 // Print header
-                PrintHeader(menuContainer.header);
+                 PrintHeader(menuContainer.header);
 
                 // Print out each menu item option
                 PrintListItems(menuContainer.textLines);

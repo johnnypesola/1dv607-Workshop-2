@@ -17,8 +17,11 @@ namespace Workshop2.Model.BLL
 
 
         public int autoExit { get; private set; }
-
         // Constructor
+        public MenuItem(String menuText)
+        {
+            text = menuText;
+        }
         public MenuItem(String triggerKey, String menuText)
         {
             text = menuText;
