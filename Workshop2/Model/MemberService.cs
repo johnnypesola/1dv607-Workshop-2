@@ -211,7 +211,7 @@ namespace Workshop2.Model
 
         public void DeleteBoat(int memberId, Boat boat)
         {
-            DeleteBoat(new Member { Id = memberId }, boat);
+            DeleteBoat(GetMember(memberId), boat);
         }
 
         public void DeleteBoat(Member member, Boat boat)

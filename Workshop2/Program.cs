@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Workshop2.Model;
 using Workshop2.Model.BLL;
+using Workshop2.View;
 
 namespace Workshop2
 {
@@ -27,12 +28,12 @@ namespace Workshop2
             // Uncomment this if you want to reset all the data in database to defaults.
             Model.DAL.DALBase.SetupTables();
             BoatClubApp bc = new BoatClubApp();
-            //MemberController memberController;
-            // Uncomment this if you want to reset all the data in database to defaults.
-            Model.DAL.DALBase.SetupTables();
-            // Create new member controller, it should do stuff with members
-            //memberController = new MemberController();
+
             bc.generateMenu();
+
+//            MenuView menuView = new MenuView();
+
+//            menuView.DisplayParentMenu();
         }
     }
 }
