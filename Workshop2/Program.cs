@@ -29,7 +29,7 @@ namespace Workshop2
             Model.DAL.DALBase.SetupTables();
             BoatClubApp bc = new BoatClubApp();
 
-            bc.generateMenu();
+            bc.GenerateMenu();
 
 //            MenuView menuView = new MenuView();
 

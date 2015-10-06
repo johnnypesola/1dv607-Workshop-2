@@ -226,43 +226,5 @@ namespace Workshop2.View
 
             return null;
         }    
-
-        public void DisplayParentMenu()
-        {
-            MenuContainer parentMenu = new MenuContainer("Parent menu");
-
-            parentMenu.textLines.Add("Kellogs Cornflakes");
-            parentMenu.textLines.Add("Kellogs Frosties");
-
-            parentMenu.menuItems.Add(new MenuItem("V", "Show verbose list", DisplayChildMenu));
-            parentMenu.menuItems.Add(new MenuItem(null, "Show nothing at all", DisplayChildMenu));
-            parentMenu.menuItems.Add(new MenuItem("1", "Some question to answer", GetSomeStuff));
-            
-            
-
-            parentMenu.footer = "Choose a member.";
-
-            // Display this menu
-            PrintMenu(parentMenu);
-        }
-
-        public void GetSomeStuff()
-        {
-            String myValue = GetUserInputLine("When did it happen?");
-            String myOtherValue = GetUserInputLine("Why did it happen?");
-        }
-
-        public void DisplayChildMenu()
-        {
-            MenuContainer childMenu = new MenuContainer("Child menu");
-
-            childMenu.menuItems.Add(new MenuItem("D", "Do stuff", DisplayChildMenu));
-
-            // Display this menu
-            PrintMenu(childMenu);
-        }
-
     }
-
-
 }
