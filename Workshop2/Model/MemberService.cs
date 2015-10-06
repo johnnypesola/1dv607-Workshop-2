@@ -243,6 +243,18 @@ namespace Workshop2.Model
 
             return member.Boats.Find(x => (x.BoatId == boat.BoatId));
         }
+        public bool IsBoatLenghtValid(string boatLenght)
+        {
+            return true;
+        }
+        public bool IsMemberNameValid(string memberName)
+        {
+            return true;
+        }
+        public bool IsMemberPersonNumberValid(string personNumber)
+        {
+            return true;
+        }
 
 
         public void TestAll() // Test all methods
