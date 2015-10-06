@@ -27,31 +27,15 @@ namespace Workshop2
             PrintMainMenu();
         }
 
-        /*
-        private void ChooseMember()
-        {
-            SetKey();
-            for (int i = 1; i <= _members.Count; i++)
-            {
-                if (key == i.ToString())
-                {
-                    printMemberInfo(_members[i-1]);
-                    PrintIndividialMenu();
-                    ReadIndividualMenu();
-                }
-            }
-        }
-         */ 
-
         private void PrintMainMenu()
         {
-            MenuContainer mainMenu = new MenuContainer("Welcome to the happy boat club!");
+            MenuContainer menu = new MenuContainer("Welcome to the happy boat club!");
 
-            mainMenu.menuItems.Add(new MenuItem("1", "View compact list", PrintCompactList));
-            mainMenu.menuItems.Add(new MenuItem("2", "View verbose list", PrintVerboseList));
-            mainMenu.menuItems.Add(new MenuItem("3", "Add new member", AddNewMember));
+            menu.menuItems.Add(new MenuItem("1", "View compact list", PrintCompactList));
+            menu.menuItems.Add(new MenuItem("2", "View verbose list", PrintVerboseList));
+            menu.menuItems.Add(new MenuItem("3", "Add new member", AddNewMember));
 
-            _menuView.PrintMenu(mainMenu);
+            _menuView.PrintMenu(menu);
         }
 
         private void PrintIndividialMenu()
@@ -123,9 +107,16 @@ namespace Workshop2
         }
         private void AddNewMember()
         {
-            Console.WriteLine("Add new member");
-            Console.WriteLine("Enter name:");
-            string namn = Console.ReadLine().ToString();
+            Member m =  new Member();
+
+            m.Name = _menuView.GetUserInputLine("Enter new member name");
+
+            m.PersonalNumber = _menuView.GetUserInputLine("Enter new member personal number");
+
+            _memberService.SaveMember(m);
+
+            /*
+            
             //Validate name
             if (true)
             {
@@ -134,25 +125,26 @@ namespace Workshop2
             else
             {
                 Console.WriteLine("Invalid format on name: {0}", namn);
-            }
+            }*/
+
         }
         private void printMemberInfo(object member)
         {
             // Cast object type to member
             Member m = (Member)member;
 
-            MenuContainer memberInfoMenu = new MenuContainer(m.Name);
+            MenuContainer menu = new MenuContainer(m.Name);
 
             _menuView.PrintHeader(m.Name);
 
-            memberInfoMenu.textLines.Add(String.Format("Personal number: {0}", m.PersonalNumber));
-            memberInfoMenu.textLines.Add("");
-            memberInfoMenu.textLines.Add("Boats:");
+            menu.textLines.Add(String.Format("Personal number: {0}", m.PersonalNumber));
+            menu.textLines.Add("");
+            menu.textLines.Add("Boats:");
 
             int boatCount = 1;
             foreach (Boat b in m.Boats)
             {
-                memberInfoMenu.menuItems.Add(
+                menu.menuItems.Add(
                     new MenuItem(
                         boatCount.ToString(),
                         String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength),
@@ -163,12 +155,53 @@ namespace Workshop2
 
                 boatCount++;
             }
-            if (m.Boats.Count == 0)
+
+            menu.menuItems.Add(new MenuItem("A", "Add boat", printAddBoat, m, 1));
+            menu.menuItems.Add(new MenuItem("D", "Delete this member", deleteMember, m, 2));
+
+            menu.footer = m.Boats.Count > 0 ? "Pick a boat, add a new one or edit member." : "This person has no boats.";
+
+            _menuView.PrintMenu(menu);
+        }
+
+        private void deleteMember(object member)
+        {
+            Member m = (Member)member;
+            _memberService.DeleteMember(m);
+        }
+
+        private void changeMember()
+        {
+
+        }
+
+        private void printAddBoat(object member)
+        {
+            Member m = (Member)member;
+            Boat b = new Boat();
+
+            b.BoatLength = decimal.Parse(_menuView.GetUserInputLine("Enter new boat length"));
+
+            MenuContainer menu = new MenuContainer("Choose new boat type");
+
+            menu.menuItems.Add(new MenuItem("S", "Sailboat"));
+            menu.menuItems.Add(new MenuItem("M", "Motorsailer"));
+            menu.menuItems.Add(new MenuItem("C", "Canoe"));
+            menu.menuItems.Add(new MenuItem("O", "Other"));
+
+            switch (_menuView.GetUserOption(menu))
             {
-                memberInfoMenu.footer = "This person has no boats.";
+                case "S": b.BoatType = "Sailboat";
+                    break;
+                case "M": b.BoatType = "Motorsailer";
+                    break;
+                case "C": b.BoatType = "Canoe";
+                    break;
+                case "O": b.BoatType = "Other";
+                    break;
             }
 
-            _menuView.PrintMenu(memberInfoMenu);
+            _memberService.SaveBoat(m, b);
         }
 
         private void printMemberBoat(object boat)
@@ -178,17 +211,19 @@ namespace Workshop2
 
             Member m = _memberService.GetMember(b.MemberId);
 
-            MenuContainer memberBoatMenu = new MenuContainer(m.Name);
+            MenuContainer menu = new MenuContainer(m.Name);
 
-            memberBoatMenu.textLines.Add(String.Format("Boat type: {0}", b.BoatType));
-            memberBoatMenu.textLines.Add(String.Format("Length: {0}", b.BoatLength));
+            menu.textLines.Add(String.Format("Boat type: {0}", b.BoatType));
+            menu.textLines.Add(String.Format("Length: {0}", b.BoatLength));
 
 
-            memberBoatMenu.menuItems.Add(new MenuItem("D", "Delete boat", DeleteMemberBoat, b, 2));
-            memberBoatMenu.menuItems.Add(new MenuItem("T", "Change boat type", printEditBoatType, b, 2));
-            memberBoatMenu.menuItems.Add(new MenuItem("L", "Change length", printEditBoatLength, b, 2));
+            menu.menuItems.Add(new MenuItem("D", "Delete boat", deleteMemberBoat, b, 2));
+            menu.menuItems.Add(new MenuItem("T", "Change boat type", printEditBoatType, b, 2));
+            menu.menuItems.Add(new MenuItem("L", "Change length", printEditBoatLength, b, 2));
 
-            _menuView.PrintMenu(memberBoatMenu);
+            menu.footer = "What would you like to do?";
+
+            _menuView.PrintMenu(menu);
         }
 
         private void printEditBoatLength(object boat)
@@ -202,14 +237,14 @@ namespace Workshop2
         {
             Boat b = (Boat)boat;
 
-            MenuContainer memberBoatMenu = new MenuContainer("Choose new boat type");
+            MenuContainer menu = new MenuContainer("Choose new boat type");
 
-            memberBoatMenu.menuItems.Add(new MenuItem("S", "Sailboat"));
-            memberBoatMenu.menuItems.Add(new MenuItem("M", "Motorsailer"));
-            memberBoatMenu.menuItems.Add(new MenuItem("C", "Canoe"));
-            memberBoatMenu.menuItems.Add(new MenuItem("O", "Other"));
+            menu.menuItems.Add(new MenuItem("S", "Sailboat"));
+            menu.menuItems.Add(new MenuItem("M", "Motorsailer"));
+            menu.menuItems.Add(new MenuItem("C", "Canoe"));
+            menu.menuItems.Add(new MenuItem("O", "Other"));
 
-            switch (_menuView.GetUserOption(memberBoatMenu))
+            switch (_menuView.GetUserOption(menu))
             {
                 case "S": b.BoatType = "Sailboat";
                     break;
@@ -222,18 +257,11 @@ namespace Workshop2
             }
         }
 
-
-        private void DeleteMemberBoat(object boat)
+        private void deleteMemberBoat(object boat)
         {
             Boat b = (Boat)boat;
 
             _memberService.DeleteBoat(b.MemberId, b);
-        }
-
-
-        private void changeMember()
-        {
-
         }
     }
 }

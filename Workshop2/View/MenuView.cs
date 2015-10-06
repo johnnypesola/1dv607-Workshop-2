@@ -173,10 +173,11 @@ namespace Workshop2.View
             return Console.ReadKey().KeyChar.ToString().ToUpper();
         }
 
-        public string GetUserInputLine(String question)
+        public string GetUserInputLine(String information)
         {
             Console.Clear();
-            Console.WriteLine(question);
+            Console.WriteLine(information);
+
             return Console.ReadLine();
         }
 

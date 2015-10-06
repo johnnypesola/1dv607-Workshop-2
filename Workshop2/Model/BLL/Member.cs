@@ -22,5 +22,12 @@ namespace Workshop2.Model
         public string PersonalNumber { get; set; }
 
         public List<Boat> Boats { get; set; }
+
+        // Constructor
+        public Member()
+        {
+            // Add boat list when constructed
+            Boats = new List<Boat>();
+        }
     }
 }
