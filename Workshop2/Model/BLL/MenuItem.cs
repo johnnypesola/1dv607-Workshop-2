@@ -15,7 +15,6 @@ namespace Workshop2.Model.BLL
         public object argument { get; private set; }
         public Action<object> actionWithArgument { get; private set; }
 
-
         public int autoExit { get; private set; }
         // Constructor
         public MenuItem(String menuText)
