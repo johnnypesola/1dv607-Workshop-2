@@ -141,6 +141,8 @@ namespace Workshop2
             }
 
             menu.menuItems.Add(new MenuItem("A", "Add boat", PrintAddBoat, m, 1));
+            menu.menuItems.Add(new MenuItem("N", "Change name", PrintEditMemberName, m, 2));
+            menu.menuItems.Add(new MenuItem("P", "Change personal number", PrintEditPersonalNumber, m, 2)); 
             menu.menuItems.Add(new MenuItem("D", "Delete this member", DeleteMemberMenu, m));
 
             menu.footer = m.Boats.Count > 0 ? "Pick a boat, add a new one or edit member." : "This person has no boats.";
@@ -162,11 +164,6 @@ namespace Workshop2
 
             _menuView.PrintMenu(menu);
 
-        }
-
-        private void ChangeMember()
-        {
-            // TODO Add functionality 
         }
 
         private void PrintAddBoat(object member)
@@ -219,7 +216,17 @@ namespace Workshop2
 
             _menuView.PrintMenu(menu);
         }
+        private void PrintEditMemberName(object member)
+        {
+            Member m = (Member)member;
 
+            m.Name = _menuView.GetUserInputLine("Enter new name");
+        }
+        private void PrintEditPersonalNumber(object member)
+        {
+            Member m = (Member)member;
+            m.PersonalNumber = _menuView.GetUserInputLine("Enter new personal number in the format NNNNNN-NNNN");
+        }
         private void PrintEditBoatLength(object boat)
         {
             Boat b = (Boat)boat;
