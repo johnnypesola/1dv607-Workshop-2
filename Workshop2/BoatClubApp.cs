@@ -5,187 +5,265 @@ using System.Text;
 using System.Threading.Tasks;
 using Workshop2.Model;
 using Workshop2.Model.BLL;
-
+using Workshop2.View;
 
 namespace Workshop2
 {
-    class BoatClubApp
+    class BoatClubController
     {
-        public static string key;
-        private List<Member> _members;
+        private MemberService _memberService;
+        private MenuView _menuView;
 
-        //Constructor
-        public BoatClubApp()
+        // Constructor
+        public BoatClubController()
         {
-            MemberService ms = new MemberService();
-            _members = ms.MemberList;
-        }
-        public void generateMenu()
-        {
-            do
-            {
-                PrintMainMenu();
-                SetKey();
-                
-                if (ReadMainMenuChoise(key))
-                {
-                    do
-                    {
-                        switch (key)
-                        {
-                            case "1":
-                                PrintCompactList();
-                                ChooseMember();
-                                break;
-                            case "2":
-                                PrintVerboseList();
-                                ChooseMember();
-                                break;
-                            case "3":
-                                AddNewMember();
-                                break;
-                            default:
-                                Console.WriteLine("Invalid choise, please pick again or choose B to go back");
-                                break;
-                        }
-                       SetKey();
-                    }
-                    while (key.ToUpper() != "B");
-                    
-                }
-            }
-            while (key.ToUpper() != "X");
-            Console.WriteLine("Closing the application. Press any key to close.");
-            Console.ReadKey();
+            _memberService = new MemberService();
+            _menuView = new MenuView();
         }
 
-        private void ChooseMember()
+        public void GenerateMenu()
         {
-            SetKey();
-            for (int i = 1; i <= _members.Count; i++)
-            {
-                if (key == i.ToString())
-                {
-                    printMemberInfo(_members[i-1]);
-                    PrintIndividialMenu();
-                    ReadIndividualMenu();
-                }
-            }
+            PrintMainMenu();
         }
+
         private void PrintMainMenu()
         {
-            Console.WriteLine("Welcome to the happy boat club!");
-            Console.WriteLine("1. View compact list");
-            Console.WriteLine("2. View verbose list");
-            Console.WriteLine("3. Add new member");
-            Console.WriteLine("X. Exit the application");
-        }
-        private void PrintIndividialMenu()
-        {
-            Console.WriteLine("Press:");
-            Console.WriteLine("C to change member info");
-            Console.WriteLine("B to go back");
-            Console.WriteLine("F to add boat");
-            Console.WriteLine("Or type boat number to change boat");
-        }
-        private void ReadIndividualMenu()
-        {
-            SetKey();
+            MenuContainer menu = new MenuContainer("Welcome to the happy boat club!");
 
-            if (key.ToUpper() == "C")
-            {
-                Console.WriteLine("Change member info");
-            }
-            else if (key.ToUpper() == "F")
-            {
-                Console.WriteLine("Add boat");
-            }
-        }
-        static bool ReadMainMenuChoise(string key)
-        {
-            if (key == "1")
-            {
-                Console.WriteLine("You choosed Compact List");
-                return true;
-            }
-            else if (key == "2")
-            {
-                Console.WriteLine("You choosed Verbose List");
-                return true;
-            }
-            else if (key == "3")
-            {
-                Console.WriteLine("You choosed Add new member");
-                return true;
-            }
-            return false;
+            menu.menuItems.Add(new MenuItem("1", "View compact list", PrintCompactList));
+            menu.menuItems.Add(new MenuItem("2", "View verbose list", PrintVerboseList));
+            menu.menuItems.Add(new MenuItem("3", "Add new member", AddNewMember));
 
+            _menuView.PrintMenu(menu);
         }
-        static void SetKey()
-        {
-            key = Console.ReadLine().ToString();
-        }
+
         private void PrintCompactList()
         {
-            Console.WriteLine("All members:");
+            MenuContainer menu = new MenuContainer("Compact list");
+
             int memberCount = 1;
-            foreach (Member member in _members){
-                Console.WriteLine("{0}. {1}, {2}", memberCount, member.Name, member.PersonalNumber);
+            foreach (Member member in _memberService.MemberList)
+            {
+
+                menu.menuItems.Add(
+                    new MenuItem(
+                        memberCount.ToString(),
+                        String.Format("{0}, {1}", member.Name, member.PersonalNumber),
+                        PrintMemberInfo,
+                        member
+                    )
+                );
                 memberCount++;
             }
-            Console.WriteLine("Pick a member or choose B to go back");
+
+            menu.footer = "Pick a member.";
+
+            _menuView.PrintMenu(menu);
         }
         private void PrintVerboseList()
         {
-            Console.WriteLine("Verbose List");
+            // TODO, add boats to verbose list - how?
+
+            MenuContainer menu = new MenuContainer("Verbose List");
+            _menuView.PrintHeader("Verbose List");
             int memberCount = 1;
-            foreach (Member member in _members)
+            foreach (Member member in _memberService.MemberList)
             {
-                Console.WriteLine("{0}. {1}, {2}", memberCount, member.Name, member.PersonalNumber);
-                int boatCount = 1;
-                foreach (Boat boat in member.Boats)
+                menu.menuItems.Add(
+                new MenuItem(
+               memberCount.ToString(),
+               string.Format("{0}, {1}", member.Name, member.PersonalNumber),
+               PrintMemberInfo,
+               member
+               ));
+                foreach (Boat b in member.Boats)
                 {
-                    Console.WriteLine(boat.BoatType);
-                    boatCount++;
+                    menu.menuItems.Add(new MenuItem(String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength)));
                 }
                 memberCount++;
             }
+            menu.footer = "Pick a member.";
+
+            _menuView.PrintMenu(menu);
+
 
         }
         private void AddNewMember()
         {
-            Console.WriteLine("Add new member");
-            Console.WriteLine("Ange namn");
-            string namn = Console.ReadLine().ToString();
+            Member m = new Member();
+
+            m.Name = _menuView.GetUserInputLine("Enter new member name");
+
+            m.PersonalNumber = _menuView.GetUserInputLine("Enter new member personal number");
+
+            _memberService.SaveMember(m);
+
+
+            // TODO Validate input. Catch errors somewhere? New error template in MenuView?
+            /*
+            
             //Validate name
             if (true)
             {
-                Console.WriteLine("Du angav namn: {0}", namn);
+                Console.WriteLine("You entered name: {0}", namn);
             }
             else
             {
-                Console.WriteLine("Ogiltigt format på namn: {0}", namn);
-            }
+                Console.WriteLine("Invalid format on name: {0}", namn);
+            }*/
+
         }
-        private void printMemberInfo(Member m)
+        private void PrintMemberInfo(object member)
         {
-            Console.WriteLine(m.Name);
-            Console.WriteLine(m.PersonalNumber);
-            Console.WriteLine("Boats:");
+            // Cast object type to member
+            Member m = (Member)member;
+
+            MenuContainer menu = new MenuContainer(m.Name);
+
+            _menuView.PrintHeader(m.Name);
+
+            menu.textLines.Add(String.Format("Personal number: {0}", m.PersonalNumber));
+            menu.textLines.Add("");
+            menu.textLines.Add("Boats:");
+
             int boatCount = 1;
             foreach (Boat b in m.Boats)
             {
-                Console.WriteLine("{0}. {1}, {2} meters long", boatCount, b.BoatType, b.BoatLength);
+                menu.menuItems.Add(
+                    new MenuItem(
+                        boatCount.ToString(),
+                        String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength),
+                        PrintMemberBoat,
+                        b
+                    )
+                );
+
                 boatCount++;
             }
-            if (m.Boats.Count == 0)
+
+            menu.menuItems.Add(new MenuItem("A", "Add boat", PrintAddBoat, m, 1));
+            menu.menuItems.Add(new MenuItem("N", "Change name", PrintEditMemberName, m, 2));
+            menu.menuItems.Add(new MenuItem("P", "Change personal number", PrintEditPersonalNumber, m, 2));
+            menu.menuItems.Add(new MenuItem("D", "Delete this member", DeleteMemberMenu, m));
+
+            menu.footer = m.Boats.Count > 0 ? "Pick a boat, add a new one or edit member." : "This person has no boats.";
+
+            _menuView.PrintMenu(menu);
+        }
+
+        private void DeleteMember(object member)
+        {
+            Member m = (Member)member;
+            _memberService.DeleteMember(m);
+        }
+        private void DeleteMemberMenu(object member)
+        {
+            Member m = (Member)member;
+            MenuContainer menu = new MenuContainer("Confirm your choise");
+
+            menu.menuItems.Add(new MenuItem("Y", string.Format("Do you really want to delete {0}", m.Name), DeleteMember, member, 3));
+
+            _menuView.PrintMenu(menu);
+
+        }
+
+        private void PrintAddBoat(object member)
+        {
+            Member m = (Member)member;
+            Boat b = new Boat();
+
+            b.BoatLength = decimal.Parse(_menuView.GetUserInputLine("Enter new boat length"));
+
+            MenuContainer menu = new MenuContainer("Choose new boat type");
+
+            menu.menuItems.Add(new MenuItem("S", "Sailboat"));
+            menu.menuItems.Add(new MenuItem("M", "Motorsailer"));
+            menu.menuItems.Add(new MenuItem("C", "Canoe"));
+            menu.menuItems.Add(new MenuItem("O", "Other"));
+
+            switch (_menuView.GetUserOption(menu))
             {
-                Console.WriteLine("This person has no boats");
+                case "S": b.BoatType = "Sailboat";
+                    break;
+                case "M": b.BoatType = "Motorsailer";
+                    break;
+                case "C": b.BoatType = "Canoe";
+                    break;
+                case "O": b.BoatType = "Other";
+                    break;
+            }
+
+            _memberService.SaveBoat(m, b);
+        }
+
+        private void PrintMemberBoat(object boat)
+        {
+            // Cast object type to boat
+            Boat b = (Boat)boat;
+
+            Member m = _memberService.GetMember(b.MemberId);
+
+            MenuContainer menu = new MenuContainer(m.Name);
+
+            menu.textLines.Add(String.Format("Boat type: {0}", b.BoatType));
+            menu.textLines.Add(String.Format("Length: {0}", b.BoatLength));
+
+
+            menu.menuItems.Add(new MenuItem("D", "Delete boat", DeleteMemberBoat, b, 2));
+            menu.menuItems.Add(new MenuItem("T", "Change boat type", PrintEditBoatType, b, 2));
+            menu.menuItems.Add(new MenuItem("L", "Change length", PrintEditBoatLength, b, 2));
+
+            menu.footer = "What would you like to do?";
+
+            _menuView.PrintMenu(menu);
+        }
+        private void PrintEditMemberName(object member)
+        {
+            Member m = (Member)member;
+
+            m.Name = _menuView.GetUserInputLine("Enter new name");
+        }
+        private void PrintEditPersonalNumber(object member)
+        {
+            Member m = (Member)member;
+            m.PersonalNumber = _menuView.GetUserInputLine("Enter new personal number in the format NNNNNN-NNNN");
+        }
+        private void PrintEditBoatLength(object boat)
+        {
+            Boat b = (Boat)boat;
+
+            b.BoatLength = decimal.Parse(_menuView.GetUserInputLine("Enter new boat length"));
+        }
+
+        private void PrintEditBoatType(object boat)
+        {
+            Boat b = (Boat)boat;
+
+            MenuContainer menu = new MenuContainer("Choose new boat type");
+
+            menu.menuItems.Add(new MenuItem("S", "Sailboat"));
+            menu.menuItems.Add(new MenuItem("M", "Motorsailer"));
+            menu.menuItems.Add(new MenuItem("C", "Canoe"));
+            menu.menuItems.Add(new MenuItem("O", "Other"));
+
+            switch (_menuView.GetUserOption(menu))
+            {
+                case "S": b.BoatType = "Sailboat";
+                    break;
+                case "M": b.BoatType = "Motorsailer";
+                    break;
+                case "C": b.BoatType = "Canoe";
+                    break;
+                case "O": b.BoatType = "Other";
+                    break;
             }
         }
-        private void changeMember()
-        {
 
+        private void DeleteMemberBoat(object boat)
+        {
+            Boat b = (Boat)boat;
+
+            _memberService.DeleteBoat(b.MemberId, b);
         }
     }
 }
