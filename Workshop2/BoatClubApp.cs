@@ -52,7 +52,6 @@ namespace Workshop2
                         member
                     )
                 );
-
                 memberCount++;
             }
 
@@ -62,23 +61,30 @@ namespace Workshop2
         }
         private void PrintVerboseList()
         {
-            // TODO, apply MenuContainer and MenuItems
+            // TODO, add boats to verbose list - how?
 
-            /*
+            MenuContainer menu = new MenuContainer("Compact list");
             _menuView.PrintHeader("Verbose List");
             int memberCount = 1;
             foreach (Member member in _memberService.MemberList)
             {
-                Console.WriteLine("{0}. {1}, {2}", memberCount, member.Name, member.PersonalNumber);
-                int boatCount = 1;
-                foreach (Boat boat in member.Boats)
+                menu.menuItems.Add(
+                new MenuItem(
+               memberCount.ToString(),
+               string.Format("{0}, {1}", member.Name, member.PersonalNumber),
+               PrintMemberInfo,
+               member
+               ));
+                foreach (Boat b in member.Boats)
                 {
-                    Console.WriteLine(boat.BoatType);
-                    boatCount++;
+                    menu.menuItems.Add(new MenuItem(String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength)));
                 }
                 memberCount++;
             }
-            */
+            menu.footer = "Pick a member.";
+
+            _menuView.PrintMenu(menu);
+            
 
         }
         private void AddNewMember()
