@@ -141,7 +141,7 @@ namespace Workshop2
             }
 
             menu.menuItems.Add(new MenuItem("A", "Add boat", PrintAddBoat, m, 1));
-            menu.menuItems.Add(new MenuItem("D", "Delete this member", DeleteMember, m, 2));
+            menu.menuItems.Add(new MenuItem("D", "Delete this member", DeleteMemberMenu, m, 2));
 
             menu.footer = m.Boats.Count > 0 ? "Pick a boat, add a new one or edit member." : "This person has no boats.";
 
@@ -150,8 +150,22 @@ namespace Workshop2
 
         private void DeleteMember(object member)
         {
+            //It should not be possible to go back from Delete confirmation, only forward to main menu - now B closes the application
             Member m = (Member)member;
             _memberService.DeleteMember(m);
+            MenuContainer menu = new MenuContainer("Delete confirmed");
+            menu.menuItems.Add(new MenuItem(string.Format("Member {0} has been deleted", m.Name)));
+            _menuView.PrintMenu(menu);
+        }
+        private void DeleteMemberMenu(object member)
+        {
+            Member m = (Member)member;
+            MenuContainer menu = new MenuContainer("Confirm your choise");
+
+            menu.menuItems.Add(new MenuItem("Y", string.Format("Do you really want to delete {0}", m.Name), DeleteMember, m, 2));
+
+            _menuView.PrintMenu(menu);
+
         }
 
         private void ChangeMember()
@@ -246,6 +260,14 @@ namespace Workshop2
             Boat b = (Boat)boat;
 
             _memberService.DeleteBoat(b.MemberId, b);
+        }
+        private void ConfirmationMenu(string confirmationText)
+        {
+            MenuContainer menu = new MenuContainer("Confirm your choise");
+
+            menu.menuItems.Add(new MenuItem("Y", confirmationText));
+
+            _menuView.PrintMenu(menu);
         }
     }
 }
