@@ -14,7 +14,7 @@ namespace Workshop2.Model
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Member name is required.")]
-        [StringLength(30, ErrorMessage = "Member name must not exceed 30 chars.")]
+        [StringLength(30, ErrorMessage = "Member name must not exceed 30 characters")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Member personal number is required.")]
@@ -22,5 +22,12 @@ namespace Workshop2.Model
         public string PersonalNumber { get; set; }
 
         public List<Boat> Boats { get; set; }
+
+        // Constructor
+        public Member()
+        {
+            // Add boat list when constructed
+            Boats = new List<Boat>();
+        }
     }
 }

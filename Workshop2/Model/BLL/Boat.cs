@@ -16,6 +16,7 @@ namespace Workshop2.Model.BLL
         public int MemberId { get; set; }
 
         [Required(ErrorMessage = "Boat must have a length.")]
+        [RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Boat length must be in the following format: NN.N")]
         public decimal BoatLength { get; set; }
 
         [Required(ErrorMessage = "Boat must have a type.")]

@@ -34,6 +34,7 @@ namespace Workshop2.Model
             }
         }
 
+
         public List<Member> MemberList
         {
             // Auto create object if needed
@@ -114,6 +115,9 @@ namespace Workshop2.Model
         {
             // Add boat in BoatDAL
             BoatDAL.RegisterNewBoat(boat, member);
+
+            // Add member id to boat, in case this is not done.
+            boat.MemberId = member.Id;
 
             // Add boat in local MemberList
             member.Boats.Add(boat);
@@ -211,7 +215,7 @@ namespace Workshop2.Model
 
         public void DeleteBoat(int memberId, Boat boat)
         {
-            DeleteBoat(new Member { Id = memberId }, boat);
+            DeleteBoat(GetMember(memberId), boat);
         }
 
         public void DeleteBoat(Member member, Boat boat)
@@ -242,6 +246,18 @@ namespace Workshop2.Model
             }
 
             return member.Boats.Find(x => (x.BoatId == boat.BoatId));
+        }
+        public bool IsBoatLenghtValid(string boatLenght)
+        {
+            return true;
+        }
+        public bool IsMemberNameValid(string memberName)
+        {
+            return true;
+        }
+        public bool IsMemberPersonNumberValid(string personNumber)
+        {
+            return true;
         }
 
 
