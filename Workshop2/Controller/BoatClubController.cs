@@ -54,6 +54,9 @@ namespace Workshop2
             }
 
             _menuView.PrintError(output);
+
+            // Reset error messages
+            _errorMessages.Clear();
         }
 
 
@@ -365,6 +368,7 @@ namespace Workshop2
             {
                 b.BoatLength = oldBoatLength;
                 ShowErrorMessages();
+
             }
             else
             {
