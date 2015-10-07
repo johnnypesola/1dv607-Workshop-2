@@ -68,13 +68,7 @@ namespace Workshop2
             int memberCount = 1;
             foreach (Member member in _memberService.MemberList)
             {
-                menu.menuItems.Add(
-                new MenuItem(
-               memberCount.ToString(),
-               string.Format("{0}, {1}", member.Name, member.PersonalNumber),
-               PrintMemberInfo,
-               member
-               ));
+                menu.menuItems.Add( new MenuItem(memberCount.ToString(),string.Format("{0}, {1}", member.Name, member.PersonalNumber),PrintMemberInfo,member));
                 foreach (Boat b in member.Boats)
                 {
                     menu.menuItems.Add(new MenuItem(String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength)));
