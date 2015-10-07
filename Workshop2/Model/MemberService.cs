@@ -34,6 +34,7 @@ namespace Workshop2.Model
             }
         }
 
+
         public List<Member> MemberList
         {
             // Auto create object if needed

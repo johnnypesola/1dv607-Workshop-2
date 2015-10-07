@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\BoatClubApp.cs" />
+    <Compile Include="Controller\BoatClubController.cs" />
     <Compile Include="Extensions\DALExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Model\BLL\Boat.cs" />

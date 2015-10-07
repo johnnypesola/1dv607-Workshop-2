@@ -107,6 +107,19 @@ namespace Workshop2.View
             Console.WriteLine();
         }
 
+
+        public void PrintError (String message = "There was an error with your input. Please try again.")
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue.");
+            Console.ForegroundColor = ConsoleColor.White;
+
+            GetKeyChoice();
+        }
+
         public void PrintMenu(MenuContainer menuContainer)
         {
             nestedMenuCount++;
@@ -194,17 +207,8 @@ namespace Workshop2.View
                 // Print out each menu item option
                 PrintMenuItems(menuContainer.menuItems);
 
-                // Display B for Back, or X for Exit.
-                PrintBackOrExitKeyOptions();
-
                 // Get user input, pauses the loop
                 string userInput = GetKeyChoice();
-
-                // Get out of menu if user pressed "B" for back or "X" for exit
-                if (nestedMenuCount > 1 && userInput == "B" || nestedMenuCount == 1 && userInput == "X")
-                {
-                    break;
-                }
 
                 // Find the menu that the user chose
                 MenuItem chosenMenu = menuContainer.menuItems.Find(x => (x.key == userInput));

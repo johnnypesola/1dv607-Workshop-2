@@ -11,30 +11,16 @@ namespace Workshop2
 {
     class Program
     {
-        private BoatClubController _boatClubApp;
-
-        // Properties
-        private BoatClubController BoatClubApp
-        {
-            // Auto create object if needed
-            get
-            {
-                return _boatClubApp ?? (_boatClubApp = new BoatClubController());
-            }
-        }
         static void Main(string[] args)
         {
 
             // Uncomment this if you want to reset all the data in database to defaults.
-            //Model.DAL.DALBase.SetupTables();
+            Model.DAL.DALBase.SetupTables(); // TODO: dont setup tables
 
+            // Create and run program
             BoatClubController bc = new BoatClubController();
 
             bc.GenerateMenu();
-
-//            MenuView menuView = new MenuView();
-
-//            menuView.DisplayParentMenu();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,19 +12,62 @@ namespace Workshop2
 {
     class BoatClubController
     {
+
         private MemberService _memberService;
         private MenuView _menuView;
+        private List<String> _errorMessages;
 
         // Constructor
         public BoatClubController()
         {
             _memberService = new MemberService();
             _menuView = new MenuView();
+            _errorMessages = new List<String>();
         }
+
+       
+        private bool Validate(object objectToValidate)
+        {
+            // Setup
+            ValidationContext validationContext = new ValidationContext(objectToValidate, serviceProvider: null, items: null);
+            List<ValidationResult> validationResults = new List<ValidationResult>();
+
+            // Validate
+            var isValid = Validator.TryValidateObject(objectToValidate, validationContext, validationResults, true);
+
+            // Update error messages
+            foreach (ValidationResult validationResult in validationResults)
+            {
+                _errorMessages.Add(validationResult.ErrorMessage);
+            }
+
+            return isValid;
+        }
+        
+        private void ShowErrorMessages()
+        {
+            String output = "";
+
+            foreach (String message in _errorMessages)
+            {
+                output = String.Format("{0} → {1} {2}", output, message, Environment.NewLine);
+            }
+
+            _menuView.PrintError(output);
+        }
+
 
         public void GenerateMenu()
         {
-            PrintMainMenu();
+            try
+            {
+                PrintMainMenu();
+            }
+            catch (Exception e)
+            {
+                // Print out error
+                _menuView.PrintError(e.Message);
+            }
         }
 
         private void PrintMainMenu()
@@ -92,25 +136,26 @@ namespace Workshop2
             Member m =  new Member();
 
             m.Name = _menuView.GetUserInputLine("Enter new member name");
+            m.PersonalNumber = _menuView.GetUserInputLine("Enter new member personal number in the format YYMMDD-NNNN.");
 
-            m.PersonalNumber = _menuView.GetUserInputLine("Enter new member personal number");
-
-            _memberService.SaveMember(m);
-
-
-            // TODO Validate input. Catch errors somewhere? New error template in MenuView?
-            /*
-            
-            //Validate name
-            if (true)
+            // Validate input
+            if (!Validate(m))
             {
-                Console.WriteLine("You entered name: {0}", namn);
+                ShowErrorMessages();
             }
             else
             {
-                Console.WriteLine("Invalid format on name: {0}", namn);
-            }*/
-
+                // Try to save input
+                try
+                {
+                    _memberService.SaveMember(m);
+                }
+                catch (Exception e)
+                {
+                    // Print out error
+                    _menuView.PrintError(e.Message);
+                }
+            }
         }
         private void PrintMemberInfo(object member)
         {
@@ -171,28 +216,54 @@ namespace Workshop2
             Member m = (Member)member;
             Boat b = new Boat();
 
-            b.BoatLength = decimal.Parse(_menuView.GetUserInputLine("Enter new boat length"));
+            string boatlength = _menuView.GetUserInputLine("Enter new boat length (meters with 1 decimal)");
+            decimal boatLengthDecimal;
 
-            MenuContainer menu = new MenuContainer("Choose new boat type");
-
-            menu.menuItems.Add(new MenuItem("S", "Sailboat"));
-            menu.menuItems.Add(new MenuItem("M", "Motorsailer"));
-            menu.menuItems.Add(new MenuItem("C", "Canoe"));
-            menu.menuItems.Add(new MenuItem("O", "Other"));
-
-            switch (_menuView.GetUserOption(menu))
+            if (!decimal.TryParse(boatlength, out boatLengthDecimal))
             {
-                case "S": b.BoatType = "Sailboat";
-                    break;
-                case "M": b.BoatType = "Motorsailer";
-                    break;
-                case "C": b.BoatType = "Canoe";
-                    break;
-                case "O": b.BoatType = "Other";
-                    break;
+                _menuView.PrintError();
+                return;
             }
 
-            _memberService.SaveBoat(m, b);
+            b.BoatLength = boatLengthDecimal;
+
+            // Validate input
+            if (!Validate(m))
+            {
+                ShowErrorMessages();
+            }
+            else
+            {
+                MenuContainer menu = new MenuContainer("Choose new boat type");
+
+                menu.menuItems.Add(new MenuItem("S", "Sailboat"));
+                menu.menuItems.Add(new MenuItem("M", "Motorsailer"));
+                menu.menuItems.Add(new MenuItem("C", "Canoe"));
+                menu.menuItems.Add(new MenuItem("O", "Other"));
+
+                switch (_menuView.GetUserOption(menu))
+                {
+                    case "S": b.BoatType = "Sailboat";
+                        break;
+                    case "M": b.BoatType = "Motorsailer";
+                        break;
+                    case "C": b.BoatType = "Canoe";
+                        break;
+                    case "O": b.BoatType = "Other";
+                        break;
+                }
+
+                // Try to save input
+                try
+                {
+                    _memberService.SaveBoat(m, b);
+                }
+                catch (Exception e)
+                {
+                    // Print out error
+                    _menuView.PrintError(e.Message);
+                }
+            }
         }
 
         private void PrintMemberBoat(object boat)
@@ -220,18 +291,94 @@ namespace Workshop2
         {
             Member m = (Member)member;
 
+            String oldName = m.Name;
+
             m.Name = _menuView.GetUserInputLine("Enter new name");
+
+
+            // Validate input
+            if (!Validate(m))
+            {
+                m.Name = oldName;
+                ShowErrorMessages();
+            }
+            else
+            {
+                // Try to save input
+                try
+                {
+                    _memberService.SaveMember(m);
+                }
+                catch (Exception e)
+                {
+                    // Print out error
+                    _menuView.PrintError(e.Message);
+                }
+            }            
         }
         private void PrintEditPersonalNumber(object member)
         {
             Member m = (Member)member;
+            String oldPersonalNumber = m.PersonalNumber;
+
             m.PersonalNumber = _menuView.GetUserInputLine("Enter new personal number in the format NNNNNN-NNNN");
+
+            // Validate input
+            if (!Validate(m))
+            {
+                m.PersonalNumber = oldPersonalNumber;
+                ShowErrorMessages();
+            }
+            else
+            {
+                // Try to save input
+                try
+                {
+                    _memberService.SaveMember(m);
+                }
+                catch (Exception e)
+                {
+                    // Print out error
+                    _menuView.PrintError(e.Message);
+                }
+            }
         }
         private void PrintEditBoatLength(object boat)
         {
             Boat b = (Boat)boat;
 
-            b.BoatLength = decimal.Parse(_menuView.GetUserInputLine("Enter new boat length"));
+            decimal oldBoatLength = b.BoatLength;
+
+            string boatlength = _menuView.GetUserInputLine("Enter new boat length (meters with 1 decimal)");
+            decimal boatLengthDecimal;
+
+            if(!decimal.TryParse(boatlength, out boatLengthDecimal))
+            {
+                _menuView.PrintError();
+                return;
+            }
+
+            b.BoatLength = boatLengthDecimal;
+
+            // Validate input
+            if (!Validate(b))
+            {
+                b.BoatLength = oldBoatLength;
+                ShowErrorMessages();
+            }
+            else
+            {
+                // Try to save input
+                try
+                {
+                    _memberService.SaveBoat(b.MemberId, b);
+                }
+                catch (Exception e)
+                {
+                    // Print out error
+                    _menuView.PrintError(e.Message);
+                }
+            }
         }
 
         private void PrintEditBoatType(object boat)
@@ -255,6 +402,17 @@ namespace Workshop2
                     break;
                 case "O": b.BoatType = "Other";
                     break;
+            }
+
+            // Try to save input
+            try
+            {
+                _memberService.SaveBoat(b.MemberId, b);
+            }
+            catch (Exception e)
+            {
+                // Print out error
+                _menuView.PrintError(e.Message);
             }
         }
 
