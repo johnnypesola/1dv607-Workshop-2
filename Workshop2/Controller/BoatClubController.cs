@@ -171,7 +171,7 @@ namespace Workshop2
                 menu.menuItems.Add(
                     new MenuItem(
                         boatCount.ToString(),
-                        String.Format("{0,-12} {1,5} meters long", b.BoatType, b.BoatLength),
+                        String.Format("{0} {1} meters long", b.BoatType, b.BoatLength),
                         PrintMemberBoat,
                         b
                     )
