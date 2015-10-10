@@ -88,10 +88,6 @@ namespace Workshop2.Model.DAL
                         // Add some default boats
                         command.CommandText = "INSERT INTO Boat (MemberId, BoatType, BoatLength) VALUES (1, 'Sailboat', 6.3)";
                         command.ExecuteNonQuery();
-
-                        /* BoatType */
-                        // Drop existing table if it exists
-                        command.CommandText = "DROP TABLE IF EXISTS BoatType";
                     }
 
                     connection.Close();

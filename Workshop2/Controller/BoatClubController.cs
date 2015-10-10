@@ -88,18 +88,16 @@ namespace Workshop2
         {
             MenuContainer menu = new MenuContainer("Compact list");
 
-            int memberCount = 1;
             foreach (Member member in _memberService.MemberList){
 
                 menu.menuItems.Add(
                     new MenuItem(
-                        memberCount.ToString(),
-                        String.Format("{0}, {1}", member.Name, member.PersonalNumber),
+                        member.Id.ToString(),
+                        String.Format("{0} ({1}) {2} Boats", member.Name, member.PersonalNumber, member.Boats.Count),
                         PrintMemberInfo,
                         member
                     )
                 );
-                memberCount++;
             }
 
             menu.footer = "Pick a member.";
@@ -108,32 +106,30 @@ namespace Workshop2
         }
         private void PrintVerboseList()
         {
-            // TODO, add boats to verbose list - how?
 
             MenuContainer menu = new MenuContainer("Verbose List");
-            _menuView.PrintHeader("Verbose List");
-            int memberCount = 1;
+
             foreach (Member member in _memberService.MemberList)
             {
                 menu.menuItems.Add(
-                new MenuItem(
-               memberCount.ToString(),
-               string.Format("{0}, {1}", member.Name, member.PersonalNumber),
-               PrintMemberInfo,
-               member
-               ));
+                    new MenuItem(
+                        member.Id.ToString(),
+                        string.Format("{0} ({1})", member.Name, member.PersonalNumber),
+                        PrintMemberInfo,
+                        member
+                    )
+                );
+
                 foreach (Boat b in member.Boats)
                 {
-                    menu.menuItems.Add(new MenuItem(String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength)));
+                    menu.menuItems.Add(new MenuItem(String.Format(" → {0} {1} meters long", b.BoatType, b.BoatLength)));
                 }
-                memberCount++;
             }
             menu.footer = "Pick a member.";
 
             _menuView.PrintMenu(menu);
-            
-
         }
+
         private void AddNewMember()
         {
             Member m =  new Member();
@@ -165,13 +161,9 @@ namespace Workshop2
             // Cast object type to member
             Member m = (Member)member;
 
-            MenuContainer menu = new MenuContainer(m.Name);
+            MenuContainer menu = new MenuContainer(String.Format("{0} ({1})", m.Name, m.PersonalNumber));
 
-            _menuView.PrintHeader(m.Name);
-
-            menu.textLines.Add(String.Format("Personal number: {0}", m.PersonalNumber));
-            menu.textLines.Add("");
-            menu.textLines.Add("Boats:");
+            menu.textLines.Add("Boats:");           
 
             int boatCount = 1;
             foreach (Boat b in m.Boats)
@@ -179,7 +171,7 @@ namespace Workshop2
                 menu.menuItems.Add(
                     new MenuItem(
                         boatCount.ToString(),
-                        String.Format("{0}, {1} meters long", b.BoatType, b.BoatLength),
+                        String.Format("{0,-12} {1,5} meters long", b.BoatType, b.BoatLength),
                         PrintMemberBoat,
                         b
                     )
@@ -188,7 +180,9 @@ namespace Workshop2
                 boatCount++;
             }
 
-            menu.menuItems.Add(new MenuItem("A", "Add boat", PrintAddBoat, m, 1));
+            menu.menuItems.Add(new MenuItem(""));
+            menu.menuItems.Add(new MenuItem("A", "Add boat", PrintAddBoat, m, 2));
+            menu.menuItems.Add(new MenuItem(""));
             menu.menuItems.Add(new MenuItem("N", "Change name", PrintEditMemberName, m, 2));
             menu.menuItems.Add(new MenuItem("P", "Change personal number", PrintEditPersonalNumber, m, 2)); 
             menu.menuItems.Add(new MenuItem("D", "Delete this member", DeleteMemberMenu, m));
@@ -319,12 +313,13 @@ namespace Workshop2
                 }
             }            
         }
+
         private void PrintEditPersonalNumber(object member)
         {
             Member m = (Member)member;
             String oldPersonalNumber = m.PersonalNumber;
 
-            m.PersonalNumber = _menuView.GetUserInputLine("Enter new personal number in the format NNNNNN-NNNN");
+            m.PersonalNumber = _menuView.GetUserInputLine("Enter new personal number in the format YYMMDD-NNNN");
 
             // Validate input
             if (!Validate(m))
@@ -341,11 +336,12 @@ namespace Workshop2
                 }
                 catch (Exception e)
                 {
-                    // Print out error
+                    m.PersonalNumber = oldPersonalNumber;
                     _menuView.PrintError(e.Message);
                 }
             }
         }
+
         private void PrintEditBoatLength(object boat)
         {
             Boat b = (Boat)boat;
