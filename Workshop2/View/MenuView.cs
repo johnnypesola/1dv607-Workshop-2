@@ -174,7 +174,6 @@ namespace Workshop2.View
         public static String GetKeyChoice()
         {
             return Console.ReadLine().ToUpper();
-            //return Console.ReadKey().KeyChar.ToString().ToUpper();
         }
 
         public string GetUserInputLine(String information)

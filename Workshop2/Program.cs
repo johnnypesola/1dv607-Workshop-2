@@ -15,7 +15,7 @@ namespace Workshop2
         {
 
             // Uncomment this if you want to reset all the data in database to defaults.
-            Model.DAL.DALBase.SetupTables();
+            //Model.DAL.DALBase.SetupTables();
 
             // Create and run program
             BoatClubController bc = new BoatClubController();
