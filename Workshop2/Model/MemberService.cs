@@ -80,7 +80,10 @@ namespace Workshop2.Model
             }
 
             // Add member to database
-            MemberDAL.Add(member);
+            int insertId = MemberDAL.Add(member);
+
+            // Update id on member
+            member.Id = insertId;
 
             // Add member to local Memberlist
             MemberList.Add(member);
@@ -88,18 +91,13 @@ namespace Workshop2.Model
 
         private void UpdateMember(Member member)
         {
-            Member _memberFromList;
+            List<Member> _otherMembersWithSamePnumber;
 
-            // Get member from list searching by properties: Id, PersonalNumber
-            _memberFromList = GetMember(member);
+            // Get other members with same Personal number
+            _otherMembersWithSamePnumber = GetMembers(new Member{PersonalNumber = member.PersonalNumber});
 
-            // Check if there is no member to update
-            if (_memberFromList == null) 
-            {
-                throw new Exception(String.Format("No member with personal number '{0}' or id '{1}' could be found: {0}", member.PersonalNumber, member.Id));
-            }
-            // Check if the desired personal number is already taken. MemberDAL.Get() matches members by PersonalNumber and Id.
-            else if (_memberFromList.Id != member.Id)
+            // Check if the desired personal number is already taken.
+            if (_otherMembersWithSamePnumber.Count > 1)
             {
                 throw new Exception(String.Format("There is already a member with this personal number: {0}", member.PersonalNumber));
             }
@@ -188,9 +186,9 @@ namespace Workshop2.Model
             return MemberList.Find(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
         }
 
-        public List<Member> GetAllMembers()
+        public List<Member> GetMembers(Member member)
         {
-            return MemberList;
+            return MemberList.FindAll(x => (x.Id == member.Id) || (x.PersonalNumber == member.PersonalNumber));
         }
 
         // Boat
@@ -246,41 +244,6 @@ namespace Workshop2.Model
             }
 
             return member.Boats.Find(x => (x.BoatId == boat.BoatId));
-        }
-        public bool IsBoatLenghtValid(string boatLenght)
-        {
-            return true;
-        }
-        public bool IsMemberNameValid(string memberName)
-        {
-            return true;
-        }
-        public bool IsMemberPersonNumberValid(string personNumber)
-        {
-            return true;
-        }
-
-
-        public void TestAll() // Test all methods
-        {
-            // Create a test member
-            Member member = new Member
-            {
-                Name = "Test Member",
-                PersonalNumber = "321010-1234"
-            };
-
-            // Add test member to database
-            AddMember(member);
-
-            // Get test member from database
-            GetMember(member);
-
-            // Delete member from database
-            DeleteMember(member);
-
-            // Get all members from database
-            GetAllMembers();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Workshop2.Model.DAL
 {
     class MemberDAL : DALBase
     {
-        public void Add(Member member)
+        public int Add(Member member)
         {
             try
             {
@@ -29,6 +29,17 @@ namespace Workshop2.Model.DAL
 
                         // Add to DB
                         command.ExecuteNonQuery();
+
+                        // Get last insert id sql statement
+                        command.CommandText = "SELECT last_insert_rowid()";
+
+                        // The row ID is a 64-bit value - cast the Command result to an Int64.
+                        Int64 lastRowID64 = (Int64)command.ExecuteScalar();
+
+                        // Then grab the bottom 32-bits as the unique ID of the row.
+                        int lastRowID = (int)lastRowID64;
+
+                        return lastRowID;
                     }
                 }
             }
@@ -37,6 +48,7 @@ namespace Workshop2.Model.DAL
                 throw new Exception(DAL_ERROR_MSG);
             }
         }
+
 
         public void Update(Member member)
         {

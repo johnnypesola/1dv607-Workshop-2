@@ -9,10 +9,8 @@ namespace Workshop2.View
 {
     public class MenuView
     {
-        private static int nestedMenuCount = 0;
-        private static int autoExitCount = 0;
-
-        public static string key;
+        private int nestedMenuCount = 0;
+        private int autoExitCount = 0;
 
     // Private methods
 
@@ -30,7 +28,7 @@ namespace Workshop2.View
             Console.ForegroundColor = ConsoleColor.Gray;
             foreach (String listString in list)
             {
-                Console.Write(String.Format("  {0}", listString));
+                Console.Write(String.Format("{0}", listString));
                 Console.WriteLine();
             }
             Console.WriteLine();
@@ -42,7 +40,7 @@ namespace Workshop2.View
             foreach (MenuItem menu in menuItems)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(String.Format("{0,-2}", menu.key));
+                Console.Write(String.Format("{0,-3}", menu.key));
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(String.Format("{0}", menu.text));
                 Console.WriteLine();
@@ -67,14 +65,6 @@ namespace Workshop2.View
                 Console.Write(" to exit");
             }
             Console.WriteLine();
-        }
-
-        private void PrintModelObjects(List<Object> objects)
-        {
-            foreach(object obj in objects)
-            {
-
-            }
         }
 
         private void ExecuteMenuAction(MenuItem menu)
@@ -130,7 +120,7 @@ namespace Workshop2.View
                 Console.Clear();
 
                 // Print header
-                 PrintHeader(menuContainer.header);
+                PrintHeader(menuContainer.header);
 
                 // Print out each menu item option
                 PrintListItems(menuContainer.textLines);
@@ -183,7 +173,8 @@ namespace Workshop2.View
 
         public static String GetKeyChoice()
         {
-            return Console.ReadKey().KeyChar.ToString().ToUpper();
+            return Console.ReadLine().ToUpper();
+            //return Console.ReadKey().KeyChar.ToString().ToUpper();
         }
 
         public string GetUserInputLine(String information)
@@ -227,8 +218,6 @@ namespace Workshop2.View
                 }
 
             } while (true);
-
-            return null;
         }    
     }
 }
